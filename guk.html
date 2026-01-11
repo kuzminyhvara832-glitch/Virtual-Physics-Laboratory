@@ -184,11 +184,8 @@
         </div>
     </div>
 
-    <!-- Добавьте этот скрипт в конец тега <script> -->
     <script>
-        // Физическая пружина с реалистичным поведением
         $(document).ready(function() {
-            // Элементы
             var canvas = document.getElementById('spring-canvas');
             var ctx = canvas.getContext('2d');
             var weight = $('#physics-weight');
@@ -197,42 +194,33 @@
             var resetBtn = $('#physics-reset');
            
             // Физические параметры
-            var stiffness = 1.0;        // Жёсткость (Н/м)
-            var damping = 5;           // Демпфирование
-            var mass = 1.0;            // Масса груза (кг)
-           
-            // Состояние системы
-            var position = 0;          // Текущая позиция (отклонение от нормы в метрах)
-            var velocity = 0;          // Скорость (м/с)
-           
-            // Анимация
+            var stiffness = 1.0;       
+            var damping = 5;         
+            var mass = 1.0;           
+        
+            var position = 0;        
+            var velocity = 0;          
+ 
             var animationId = null;
             var lastTime = null;
            
-            // Перетаскивание
             var isDragging = false;
             var dragStartY = 0;
             var dragStartPosition = 0;
             var dragOffset = 0;
            
-            // Масштаб (пикселей на метр)
             var scale = 100;
            
-            // Инициализация
             function init() {
-                // Устанавливаем размеры canvas
                 canvas.width = canvas.offsetWidth;
                 canvas.height = canvas.offsetHeight;
                
-                // Начальная позиция груза
                 updateWeightPosition();
                
-                // Запускаем анимацию
                 if (!animationId) {
                     animationId = requestAnimationFrame(animate);
                 }
-               
-                // Обновляем значения
+
                 updateUI();
             }
            
@@ -242,18 +230,14 @@
                 var deltaTime = (currentTime - lastTime) / 1000; // В секундах
                 lastTime = currentTime;
                
-                // Ограничиваем deltaTime для стабильности
                 if (deltaTime > 0.1) deltaTime = 0.1;
-               
-                // Если не тащим, применяем физику
                 if (!isDragging) {
                     // Сила упругости (Закон Гука): F = -k * x
                     var springForce = -stiffness * position;
                    
-                    // Сила демпфирования: F = -c * v
+
                     var dampingForce = -damping * velocity;
                    
-                    // Суммарная сила
                     var totalForce = springForce + dampingForce;
                    
                     // Ускорение (Второй закон Ньютона): a = F / m
@@ -264,20 +248,15 @@
                     position += velocity * deltaTime;
                 }
                
-                // Отрисовываем
                 draw();
                
-                // Обновляем UI
                 updateUI();
                 updateWeightPosition();
-               
-                // Продолжаем анимацию
+  
                 animationId = requestAnimationFrame(animate);
             }
            
-            // Отрисовка пружины
             function draw() {
-                // Очищаем canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                
                 // Координаты
@@ -295,8 +274,6 @@
                 } else {
                     springColor = '#dc3545';
                 }
-               
-                // Рисуем пружину как спираль
                 ctx.beginPath();
                 ctx.strokeStyle = springColor;
                 ctx.lineWidth = 4;
@@ -318,8 +295,6 @@
                 }
                
                 ctx.stroke();
-               
-                // Рисуем верхнее крепление
                 ctx.beginPath();
                 ctx.fillStyle = '#6c757d';
                 ctx.rect(centerX - 10, topY - 5, 20, 10);
@@ -334,8 +309,7 @@
                
                 weight.css('top', weightTop + 'px');
             }
-           
-            // Обновление UI
+  
             function updateUI() {
                 $('#stiffness-value').text(stiffness.toFixed(1));
                 $('#physics-deformation').text(Math.abs(position).toFixed(2) + ' м');
@@ -365,13 +339,8 @@
                
                 var eventY = e.type === 'touchmove' ? e.originalEvent.touches[0].clientY : e.clientY;
                 var deltaY = eventY - dragStartY;
-               
-                // Применяем сопротивление в зависимости от жёсткости
-                // Чем больше жёсткость, тем сложнее тянуть
                 var resistance = 1 + stiffness * 0.5;
                 dragOffset = deltaY / (scale * resistance);
-               
-                // Ограничиваем максимальную деформацию
                 dragOffset = Math.max(-2, Math.min(dragOffset, 2));
                
                 position = dragStartPosition + dragOffset;
@@ -393,8 +362,6 @@
                
                 velocity = 0;
             }
-           
-            // Обработчики слайдеров
             stiffnessSlider.on('input', function() {
                 stiffness = parseFloat($(this).val());
                 updateUI();
@@ -411,15 +378,13 @@
                 updateUI();
                 updateWeightPosition();
             });
-           
-            // Обработка изменения размеров окна
+
             $(window).on('resize', function() {
                 canvas.width = canvas.offsetWidth;
                 canvas.height = canvas.offsetHeight;
                 draw();
             });
-           
-            // Связь с основными ползунками
+
             $('#kRange').on('input', function() {
                 var value = parseFloat($(this).val());
                 stiffnessSlider.val(value);
@@ -435,7 +400,6 @@
                 updateWeightPosition();
             });
            
-            // Инициализация
             init();
         });
     </script>
