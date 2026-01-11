@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        var mass= $("#mass-slider").val();
+        var velocity=$("#velocity-slider").val();
+        
+        function calculator(){
+            $("#kinetic-energy-value").text(((mass * velocity * velocity) / 2).toFixed(2))
+        }
+        $().ready(function(){
+            $("#mass-slider").on("input", function(){
+                mass=$(this).val()
+                $("#mass-value").text(mass)
+                calculator()
+            })
+        })
+
+        $().ready(function(){
+            $("#velocity-slider").on("input", function(){
+                velocity=$(this).val()
+                $("#velocity-value").text(velocity)
+                calculator()
+            })
+        })
+
+
+    </script>
+</head>
+<body class="light-theme">
+                <div id="kineticenergy-lab" class="lab-content active">
+                <h2>Кинетическая энергия</h2>
+                <p class="description">Энергия движущегося тела Формула</p>
+
+                <h3>Формула:</h3>
+                <p class="formula">
+                    <span class="formula-text-kineticenergy">Eₖ = (m · v²) / 2</span>
+                </p>
+
+                <h3>где:</h3>
+                <ul class="definitions">
+                    <li>Eₖ — кинетическая энергия (Дж, джоули)</li>
+                    <li>m — масса (кг)</li>
+                    <li>v — скорость (м/с)</li>
+                </ul>
+                <div class="slider-section">
+                    <p>Масса (m): <span id="mass-value">1</span> кг</p>
+                    <input type="range" min="0" max="100" step="0.1" value="1" id="mass-slider" />
+
+                    <p>Скорость (v): <span id="velocity-value">0</span> м/с</p>
+                    <input type="range" min="0" max="50" step="0.1" value="0" id="velocity-slider" />
+
+                    <p>Кинетическая энергия (Eₖ): <span id="kinetic-energy-value">0.00</span> Дж</p>
+                </div>
+            </div>
+</body>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Виртуальная физическая лаборатория</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="projectcss.css">
+    <script src="js/jquery.min.js" ></script>
+    <script src="js/jquery-ui.min.js" ></script>
+    <script src="js/project.js" ></script>
+</head>
+<body class="light-theme">
+    <div class="theme-switcher">
+        <button id="theme-toggle">Темная тема</button>
+    </div>
+
+    <div class="lab-container">
+        <div class="sidebar">
+            <h1>Виртуальная физическая лаборатория</h1>
+            <p class="instruction">Выберите лабораторную работу:</p>
+            <div class="nav-buttons">
+                <button class="nav-button active" data-lab-id="guk">Закон Гука</button>
+                <button class="nav-button" data-lab-id="newton">Второй закон Ньютона</button>
+                <button class="nav-button" data-lab-id="ohm">Закон Ома</button>
+                <button class="nav-button" data-lab-id="kineticenergy">Кинетическая энергия</button>
+                <button class="nav-button" data-lab-id="potentialenergy">Потенциальная энергия</button>
+                <button class="nav-button" data-lab-id="idealgas">Идеальный газ</button>
+                <button class="nav-button" data-lab-id="mathpendulum">Математический маятник</button>
+                <button class="nav-button" data-lab-id="lensformula">Формула линзы</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="ohm-lab" class="lab-content hidden"><h2>Закон Ома</h2><p class="description">Контент для Закона Ома</p></div>
+            <div id="kinetic-energy-lab" class="lab-content hidden"><h2>Кинетическая энергия</h2><p class="description">Контент для Кинетической энергии</p></div>
+            <div id="potential-energy-lab" class="lab-content hidden"><h2>Потенциальная энергия</h2><p class="description">Контент для Потенциальной энергии</p></div>
+            <div id="ideal-gas-lab" class="lab-content hidden"><h2>Идеальный газ</h2><p class="description">Контент для Идеального газа</p></div>
+            <div id="math-pendulum-lab" class="lab-content hidden"><h2>Математический маятник</h2><p class="description">Контент для Математического маятника</p></div>
+            <div id="lens-formula-lab" class="lab-content hidden"><h2>Формула линзы</h2><p class="description">Контент для Формулы линзы</p></div>
+
+        </div>
+    </div>
+
+    <script>
+        const navButtons = document.querySelectorAll('.nav-button');
+        const labContents = document.querySelectorAll('.lab-content');
+        const body = document.body;
+        const themeToggleBtn = document.getElementById('theme-toggle');
+
+        function setupInteractivity() {
+            var hookeKSlider = document.getElementById('hooke-k-slider');
+            const hookeDeformationSlider = document.getElementById('hooke-deformation-slider');
+            const newtonMassSlider = document.getElementById('newton-mass-slider');
+            const newtonForceSlider = document.getElementById('newton-force-slider');
+
+            if (hookeKSlider) hookeKSlider.addEventListener('input', updateHookeLab);
+            if (hookeDeformationSlider) hookeDeformationSlider.addEventListener('input', updateHookeLab);
+            if (newtonMassSlider) newtonMassSlider.addEventListener('input', updateNewtonLab);
+            if (newtonForceSlider) newtonForceSlider.addEventListener('input', updateNewtonLab);
+            
+            updateHookeLab();
+            updateNewtonLab();
+        }
+
+        function toggleTheme() {
+            if (body.classList.contains('light-theme')) {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                themeToggleBtn.textContent = 'Светлая тема';
+            } else {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                themeToggleBtn.textContent = 'Темная тема';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialActiveButton = document.querySelector('.nav-button.active');
+            if (initialActiveButton) {
+                const initialLabContent = document.getElementById(initialActiveButton.dataset.labId);
+                if (initialLabContent) {
+                    initialLabContent.classList.remove('hidden');
+                }
+            }
+            setupInteractivity();
+            toggleTheme(); 
+            toggleTheme(); 
+        });
+        
+        themeToggleBtn.addEventListener('click', toggleTheme);
+    </script>
+</body>
+</html>
