@@ -1,58 +1,72 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>
-        var mass= $("#mass-slider").val();
-        var velocity=$("#velocity-slider").val();
-        
-        function calculator(){
-            $("#kinetic-energy-value").text(((mass * velocity * velocity) / 2).toFixed(2))
-        }
-        $().ready(function(){
-            $("#mass-slider").on("input", function(){
-                mass=$(this).val()
-                $("#mass-value").text(mass)
-                calculator()
-            })
-        })
-
-        $().ready(function(){
-            $("#velocity-slider").on("input", function(){
-                velocity=$(this).val()
-                $("#velocity-value").text(velocity)
-                calculator()
-            })
-        })
-
-
-    </script>
-</head>
 <body class="light-theme">
-                <div id="kineticenergy-lab" class="lab-content active">
-                <h2>Кинетическая энергия</h2>
-                <p class="description">Энергия движущегося тела Формула</p>
+    <div class="lab-content">
+        <h1 class="text-lab-title">Лабораторная работа по Кинетической энергии</h1>
 
-                <h3>Формула:</h3>
-                <p class="formula">
-                    <span class="formula-text-kineticenergy">Eₖ = (m · v²) / 2</span>
-                </p>
+        <p class="text-lab-description">В ходе виртуальной лабораторной работы будет исследоваться энергия движущегося тела на основе формулы кинетической энергии, которая описывает зависимость энергии от массы и скорости тела.</p>
 
-                <h3>где:</h3>
+        <h2 class="text-lab-subtitle">Ход работы</h2>
+
+        <ol class="text-lab-content">
+            <li>Изучение формулы
+                <p>Рассматривается формула:</p>
+                <div class="formula">
+                    <span class="formula-text">Eₖ = (m · v²) / 2</span>
+                </div>
+                <p>где</p>
                 <ul class="definitions">
-                    <li>Eₖ — кинетическая энергия (Дж, джоули)</li>
-                    <li>m — масса (кг)</li>
-                    <li>v — скорость (м/с)</li>
+                    <li><b>Eₖ</b> — кинетическая энергия (Дж)</li>
+                    <li><b>m</b> — масса (кг)</li>
+                    <li><b>v</b> — скорость (м/с)</li>
                 </ul>
+            </li>
+            <li>Настройка параметров
+                <p>Пользователь изменяет значения массы и скорости, перемещая ползунки.</p>
                 <div class="slider-section">
                     <p>Масса (m): <span id="mass-value">1</span> кг</p>
-                    <input type="range" min="0" max="100" step="0.1" value="1" id="mass-slider" />
-
+                    <input type="range" min="0" max="100" step="0.1" value="1" id="mass-slider">
+                    
                     <p>Скорость (v): <span id="velocity-value">0</span> м/с</p>
-                    <input type="range" min="0" max="50" step="0.1" value="0" id="velocity-slider" />
-
+                    <input type="range" min="0" max="50" step="0.1" value="0" id="velocity-slider">
+                </div>
+            </li>
+            <li>Наблюдение за результатом
+                <p>Автоматически высчитывается кинетическая энергия (Eₖ) с учётом текущих параметров.</p>
+                <div class="result-box">
                     <p>Кинетическая энергия (Eₖ): <span id="kinetic-energy-value">0.00</span> Дж</p>
                 </div>
-            </div>
+            </li>
+            <li>Анализ результата
+                <p>Можно увидеть, как изменение массы и скорости влияет на кинетическую энергию, что наглядно иллюстрирует квадратичную зависимость энергии от скорости.</p>
+            </li>
+        </ol>
+
+        <h2 class="text-lab-subtitle">Вывод</h2>
+
+        <p class="text-lab-description">В этой лабораторной работе пользователь экспериментальным путём изучит, что кинетическая энергия пропорциональна массе тела и квадрату его скорости. Такая практика помогает лучше понять энергетические характеристики движущихся объектов.</p>
+    </div>
+
+    <script>
+        var mass = 1;
+        var velocity = 0;
+        
+        function calculator(){
+            $("#kinetic-energy-value").text(((mass * velocity * velocity) / 2).toFixed(2));
+        }
+        
+        $(document).ready(function(){
+            $("#mass-slider").on("input", function(){
+                mass = $(this).val();
+                $("#mass-value").text(mass);
+                calculator();
+            });
+
+            $("#velocity-slider").on("input", function(){
+                velocity = $(this).val();
+                $("#velocity-value").text(velocity);
+                calculator();
+            });
+            
+            calculator();
+        });
+    </script>
 </body>

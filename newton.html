@@ -1,68 +1,107 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<style>
+    .slider-section {
+      max-width: 700px;
+    }
+  </style>
     <script>
-        var massa = $("#newton-mass-slider").val();
-        var yskorenie = $("#newton-acceleration-slider").val();
+        var massa= $("#newton-mass-slider").val();
+        var yskorenie=$("#newton-acceleration-slider").val();
 
-        function calculator() {
+        function calculator(){
             $("#newton-force-value").text((massa * yskorenie).toFixed(2))
         }
 
-        $().ready(function () {
-            $("#newton-mass-slider").on("input", function () {
-                massa = $(this).val()
+        $().ready(function(){
+            $("#newton-mass-slider").on("input", function(){
+                massa=$(this).val()
                 $("#newton-mass-value").text(massa)
                 calculator()
             })
         })
 
-        $().ready(function () {
-            $("#newton-acceleration-slider").on("input", function () {
-                yskorenie = $(this).val()
+        $().ready(function(){
+            $("#newton-acceleration-slider").on("input", function(){
+                yskorenie=$(this).val()
                 $("#newton-acceleration-value").text(yskorenie)
                 calculator()
             })
         })
     </script>
 </head>
+<body class="light-theme">
+    <div class="lab-content">
+        <h1 class="text-newton2">Лабораторная работа по Второму закону Ньютона</h1>
 
-<body>
-    <div id="newton-lab" class="lab-content">
-        <h1>Второй закон Ньютона</h1>
-        <p class="description">Исследовать зависимость ускорения тела от приложенной силы и массы, проверить второй
-            закон Ньютона.
-        </p>
-        <h2 style="color: rgb(10, 113, 13);">Ход работы</h2>
-        <ol>
-            <li>
-                <p>Изучение формулы:</p>
-                <p class="formula">
-                <h3>F = m·a</h3>
-                </p>
+        <p class="text-newton2">В ходе виртуальной лабораторной работы будет исследоваться взаимодействие массы и ускорения на основе второго закона Ньютона, который описывает зависимость силы от массы и ускорения.</p>
 
-                <h3>где:</h3>
+        <h2 class="text-newton2">Ход работы</h2>
+
+        <ol class="text-newton2">
+            <li>Изучение формулы
+                <p>Рассматривается формула:</p>
+                <div class="formula">
+                    <span class="formula-text">F = m · a</span>
+                </div>
+                <p>где</p>
                 <ul class="definitions">
-                    <li>F - сила (Н)</li>
-                    <li>m - масса (кг)</li>
-                    <li>a - ускорение (м/с²)</li>
+                    <li><b>F</b> — сила (Н)</li>
+                    <li><b>m</b> — масса (кг)</li>
+                    <li><b>a</b> — ускорение (м/с²)</li>
                 </ul>
-
+            </li>
+            <li>Настройка параметров
+                <p>Пользователь изменяет значения массы (m) и ускорения (a), перемещая ползунки.</p>
                 <div class="slider-section">
                     <p>Масса тела (m): <span id="newton-mass-value">1.0</span> кг</p>
                     <input type="range" min="0.1" max="10" step="0.1" value="1.0" id="newton-mass-slider">
-
+                    
                     <p>Ускорение (a): <span id="newton-acceleration-value">1.0</span> м/с²</p>
                     <input type="range" min="0.1" max="10" step="0.1" value="1.0" id="newton-acceleration-slider">
-
+                </div>
+            </li>
+            <li>Наблюдение за результатом
+                <p>Автоматически высчитывается сила (F) с учётом текущих параметров.</p>
+                <div class="result-box">
                     <p>Сила (F): <span id="newton-force-value">1.00</span> Н</p>
+                </div>
+            </li>
+            <li>Анализ результата
+                <p>Можно увидеть, как изменение массы и ускорения влияет на силу, что наглядно иллюстрирует второй закон Ньютона.</p>
             </li>
         </ol>
-    </div>
+
+        <h2 class="text-newton2">Вывод</h2>
+
+        <p class="text-newton2">В этой лабораторной работе пользователь экспериментальным путём изучит, что сила пропорциональна массе и ускорению, что соответствует второму закону Ньютона. Такая практика помогает лучше понять физические свойства движущихся тел.</p>
     </div>
 
+    <script>
+        var massa = 1.0;
+        var yskorenie = 1.0;
+
+        function calculator(){
+            $("#newton-force-value").text((massa * yskorenie).toFixed(2));
+        }
+
+        $(document).ready(function(){
+            $("#newton-mass-slider").on("input", function(){
+                massa = $(this).val();
+                $("#newton-mass-value").text(massa);
+                calculator();
+            });
+
+            $("#newton-acceleration-slider").on("input", function(){
+                yskorenie = $(this).val();
+                $("#newton-acceleration-value").text(yskorenie);
+                calculator();
+            });
+            
+            calculator();
+        });
+    </script>
 </body>

@@ -1,61 +1,72 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     
-    <!-- <script src="js/jquery.min.js" ></script> -->
-    <script>
-        var voltage= $("#ohm-u-slider").val();
-        var amperage=$("#ohm-i-slider").val();
-        
-        function calculator(){
-            $("#ohm-r-value").text((voltage / amperage).toFixed(2))
-        }
-        $().ready(function(){
-            $("#ohm-u-slider").on("input", function(){
-                voltage=$(this).val()
-                $("#ohm-u-value").text(voltage)
-                calculator()
-            })
-        })
-
-        $().ready(function(){
-            $("#ohm-i-slider").on("input", function(){
-                amperage=$(this).val()
-                $("#ohm-i-value").text(amperage)
-                calculator()
-            })
-        })
-
-
-    </script>
-</head>
 <body class="light-theme">
-                <div id="ohm-lab" class="lab-content active">
-                <h2>Закон Ома</h2>
-                <p class="description">Изучение зависимости тока от напряжения и сопротивления
-Формула</p>
+    <div class="lab-content">
+        <h1 class="text-lab-title">Лабораторная работа по Закону Ома</h1>
 
-                <h3>Формула:</h3>
-                <p class="formula">
-                    <span class="formula-text-ohm">R = U / I</span>
-                </p>
+        <p class="text-lab-description">В ходе виртуальной лабораторной работы будет исследоваться зависимость силы тока от напряжения и сопротивления в электрической цепи на основе закона Ома.</p>
 
-                <h3>где:</h3>
+        <h2 class="text-lab-subtitle">Ход работы</h2>
+
+        <ol class="text-lab-content">
+            <li>Изучение формулы
+                <p>Рассматривается формула:</p>
+                <div class="formula">
+                    <span class="formula-text">R = U / I</span>
+                </div>
+                <p>где</p>
                 <ul class="definitions">
-                    <li>I — сила тока (А, амперы)</li>
-                    <li>U — напряжение (В, вольты)</li>
-                    <li>R — сопротивление (Ом, Ω)</li>
+                    <li><b>R</b> — сопротивление (Ом)</li>
+                    <li><b>U</b> — напряжение (В)</li>
+                    <li><b>I</b> — сила тока (А)</li>
                 </ul>
+            </li>
+            <li>Настройка параметров
+                <p>Пользователь изменяет значения напряжения и силы тока, перемещая ползунки.</p>
                 <div class="slider-section">
                     <p>Напряжение (U): <span id="ohm-u-value">5</span> В</p>
-                    <input type="range" min="0" max="20" step="0.1" value="5" id="ohm-u-slider" />
-
+                    <input type="range" min="0" max="20" step="0.1" value="5" id="ohm-u-slider">
+                    
                     <p>Сила тока (I): <span id="ohm-i-value">1</span> А</p>
-                    <input type="range" min="0.1" max="10" step="0.1" value="1" id="ohm-i-slider" />
-
+                    <input type="range" min="0.1" max="10" step="0.1" value="1" id="ohm-i-slider">
+                </div>
+            </li>
+            <li>Наблюдение за результатом
+                <p>Автоматически высчитывается сопротивление (R) с учётом текущих параметров.</p>
+                <div class="result-box">
                     <p>Сопротивление (R): <span id="ohm-r-value">5.00</span> Ом</p>
                 </div>
-            </div>
+            </li>
+            <li>Анализ результата
+                <p>Можно увидеть, как изменение напряжения и силы тока влияет на сопротивление, что наглядно иллюстрирует закон Ома.</p>
+            </li>
+        </ol>
+
+        <h2 class="text-lab-subtitle">Вывод</h2>
+
+        <p class="text-lab-description">В этой лабораторной работе пользователь экспериментальным путём изучит, что напряжение в цепи пропорционально силе тока и сопротивлению, что соответствует закону Ома. Такая практика помогает лучше понять принципы работы электрических цепей.</p>
+    </div>
+
+    <script>
+        var voltage = 5;
+        var amperage = 1;
+        
+        function calculator(){
+            $("#ohm-r-value").text((voltage / amperage).toFixed(2));
+        }
+        
+        $(document).ready(function(){
+            $("#ohm-u-slider").on("input", function(){
+                voltage = $(this).val();
+                $("#ohm-u-value").text(voltage);
+                calculator();
+            });
+
+            $("#ohm-i-slider").on("input", function(){
+                amperage = $(this).val();
+                $("#ohm-i-value").text(amperage);
+                calculator();
+            });
+            
+            calculator();
+        });
+    </script>
 </body>

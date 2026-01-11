@@ -1,127 +1,123 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<script>
-  $(function() {
-    var F = 0;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        $(function() {
+            var F = 0;
 
-    function updateValues() {
-      var k = parseFloat($('#kRange').val());
-      var x = parseFloat($('#xRange').val());
-      F = (k * x);
+            function updateValues() {
+                var k = parseFloat($('#kRange').val());
+                var x = parseFloat($('#xRange').val());
+                F = (k * x);
 
-      $('#kValue').text(k.toFixed(1));
-      $('#xValue').text(x.toFixed(2));
-      $('#FValue').text(F.toFixed(2));
-    }
+                $('#kValue').text(k.toFixed(1));
+                $('#xValue').text(x.toFixed(2));
+                $('#FValue').text(F.toFixed(2));
+            }
 
-    $('#kRange, #xRange').on('input', updateValues);
+            $('#kRange, #xRange').on('input', updateValues);
 
-    updateValues();
+            updateValues();
 
-        // Keep the left edge of the element
-        // at least 100 pixels from the container
-        // ui.position.left = Math.min( 100, ui.position.left );
+            $("#box-block").draggable({
+                containment: "parent",
+                drag: function(event, ui) {
+                },
+                stop: function(event, ui) {
+                    var distance = F * 100;
+                    console.log(distance);
 
-    $("#box-block").draggable({
-      containment: "parent",
-      drag: function(event, ui) {
-      },
-      stop: function(event, ui) {
-        var distance = F * 100; 
-        console.log(distance);
+                    var maxHeight = $('#box-content').height() - 70;
+                    distance = Math.min(distance, maxHeight);
 
-        var maxHeight = $('#box-content').height() - 70; 
-        distance = Math.min(distance, maxHeight);
+                    $('#box-block').animate({
+                        top: maxHeight - distance + 'px',
+                        left: "30%"
+                    }, 1000, 'easeOutElastic');
+                }
+            });
 
-        $('#box-block').animate({
-          top: maxHeight - distance + 'px', 
-          left: "30%"
-        }, 1000, 'easeOutElastic');
-      }
-    });
-
-    $('#box-block').css('top', '0px');
-  });
-</script>
-<style>
-  #box-content {
-    height: 300px;
-    position: relative;
-  }
-  #box-block {
-    width: 50px; 
-    height: 70px;
-    background-color: gray; 
-    border-radius: 5px;
-    position: absolute;
-    top: 0; 
-    left: 30%;
-    cursor: grab; 
-  }
-  #box-handle {
-    width: 20px; 
-    height: 20px; 
-    background-color: gray; 
-    border-radius: 50%;
-    position: absolute; 
-    top: -10px;
-    left: 15px; 
-  }
-</style>
+            $('#box-block').css('top', '0px');
+        });
+    </script>
+    <style>
+        #box-content {
+            height: 300px;
+            position: relative;
+        }
+        #box-block {
+            width: 50px;
+            height: 70px;
+            background-color: gray;
+            border-radius: 5px;
+            position: absolute;
+            top: 0;
+            left: 30%;
+            cursor: grab;
+        }
+        #box-handle {
+            width: 20px;
+            height: 20px;
+            background-color: gray;
+            border-radius: 50%;
+            position: absolute;
+            top: -10px;
+            left: 15px;
+        }
+    </style>
 </head>
-<body>
+<body class="light-theme">
+    <div class="lab-content">
+        <h1 class="text-lab-title">Лабораторная работа по Закону Гука</h1>
 
-<h1 class="text-gukh1">Лабораторная работа по Закону Гука</h1>
+        <p class="text-lab-description">В ходе виртуальной лабораторной работы будет исследоваться упругость пружины на основе закона Гука, который описывает зависимость силы упругости от деформации.</p>
 
-<p>В ходе виртуальной лабораторной работы будет исследоваться упругость пружины на основе закона Гука, который описывает зависимость силы упругости от деформации.</p>
+        <h2 class="text-lab-subtitle">Ход работы</h2>
 
-<h2 class="text-gukh2">Ход работы</h2>
+        <ol class="text-lab-content">
+            <li>Изучение формулы
+                <p>Рассматривается формула:</p>
+                <div class="formula">
+                    <span class="formula-text">F = -k × x</span>
+                </div>
+                <p>где</p>
+                <ul class="definitions">
+                    <li><b>F</b> — сила упругости (Н)</li>
+                    <li><b>k</b> — коэффициент жесткости пружины (Н/м)</li>
+                    <li><b>x</b> — деформация пружины (м)</li>
+                </ul>
+            </li>
+            <li>Настройка параметров
+                <p>Пользователь изменяет значения коэффициента жесткости и деформации, перемещая ползунки.</p>
+                <div class="slider-section">
+                    <p>Коэффициент жесткости (k): <span id="kValue">1.0</span> Н/м</p>
+                    <input type="range" id="kRange" min="0.1" max="5" step="0.1" value="1">
+                    
+                    <p>Деформация (x): <span id="xValue">0.25</span> м</p>
+                    <input type="range" id="xRange" min="0" max="1" step="0.01" value="0.25">
+                </div>
+            </li>
+            <li>Наблюдение за результатом
+                <p>Автоматически высчитывается сила упругости (F) с учётом текущих параметров.</p>
+                <div class="result-box">
+                    <p>Сила упругости (F): <span id="FValue">-0.25</span> Н</p>
+                </div>
+            </li>
+            <li>Анализ результата
+                <p>Вы увидите, как изменение деформации и жесткости влияет на силу упругости, что наглядно иллюстрирует закон Гука.</p>
+                <div id="box-content">
+                    <div id="box-block">
+                        <div id="box-handle"></div>
+                      </div>
+                </div>
+            </li>
+        </ol>
 
-<ol>
-  <li>
-    <p>Изучение формулы</p>
-    <div class="formula">F = -k × x</div>
-    <p>где</p>
-    <ul>
-      <li><b>F</b> — сила упругости (Н)</li>
-      <li><b>k</b> — коэффициент жесткости пружины (Н/м)</li>
-      <li><b>x</b> — деформация пружины (м)</li>
-    </ul>
-  </li>
-  <li>
-    <p>Настройка параметров</p>
-    <div class="slider-container">
-      <label for="kRange">Коэффициент жесткости (k), Н/м</label>
-      <input type="range" id="kRange" min="0.1" max="5" step="0.1" value="1" />
-      <div>Значение: <span id="kValue">1.0</span> Н/м</div>
+        <h2 class="text-lab-subtitle">Вывод</h2>
+
+        <p class="text-lab-description">В этой лабораторной работе пользователь экспериментальным путём изучит, что сила упругости пропорциональна деформации пружины и зависит от её жесткости, что соответствует закону Гука. Такая практика помогает лучше понять физические свойства упругих тел.</p>
     </div>
-    <div class="slider-container">
-      <label for="xRange">Деформация (x), м</label>
-      <input type="range" id="xRange" min="0" max="1" step="0.01" value="0.25" />
-      <div>Значение: <span id="xValue">0.25</span> м</div>
-    </div>
-  </li>
-  <li>
-    <p>Наблюдение за результатом</p>
-    <div class="output">Сила упругости (F) <span>=</span> <span id="FValue">-0.25</span> Н</div>
-  </li>
-  <li>
-    <p>Анализ результата</p>
-    <p>Вы увидите, как изменение деформации и жесткости влияет на силу упругости, что наглядно иллюстрирует закон Гука.</p>
-  </li>
-</ol>
-
-<div id="box-content">
-    <div id="box-block">
-        <div id="box-handle"></div>
-    </div>
-</div>
-
-<h2>Вывод</h2>
-<p>В этой лабораторной работе пользователь экспериментальным путём изучит, что сила упругости пропорциональна деформации пружины и зависит от её жесткости, что соответствует закону Гука. Такая практика помогает лучше понять физические свойства упругих тел.</p>
-
 </body>
 </html>
