@@ -15,6 +15,7 @@
                 $('#kValue').text(k.toFixed(1));
                 $('#xValue').text(x.toFixed(2));
                 $('#FValue').text(F.toFixed(2));
+                
             }
 
             $('#kRange, #xRange').on('input', updateValues);
@@ -34,7 +35,7 @@
 
                     $('#box-block').animate({
                         top: maxHeight - distance + 'px',
-                        left: "30%"
+                        left: "40%"
                     }, 1000, 'easeOutElastic');
                 }
             });
@@ -42,31 +43,31 @@
             $('#box-block').css('top', '0px');
         });
     </script>
-    <style>
-        #box-content {
-            height: 300px;
-            position: relative;
-        }
-        #box-block {
-            width: 50px;
-            height: 70px;
-            background-color: gray;
-            border-radius: 5px;
-            position: absolute;
-            top: 0;
-            left: 30%;
-            cursor: grab;
-        }
-        #box-handle {
-            width: 20px;
-            height: 20px;
-            background-color: gray;
-            border-radius: 50%;
-            position: absolute;
-            top: -10px;
-            left: 15px;
-        }
-    </style>
+    <!-- // <style>
+    //     #box-content {
+    //         height: 300px;
+    //         position: relative;
+    //     }
+    //     #box-block {
+    //         width: 50px;
+    //         height: 70px;
+    //         background-color: gray;
+    //         border-radius: 5px;
+    //         position: absolute;
+    //         top: 0;
+    //         left: 40%;
+    //         cursor: grab;
+    //     }
+    //     #box-handle {
+    //         width: 20px;
+    //         height: 20px;
+    //         background-color: gray;
+    //         border-radius: 50%;
+    //         position: absolute;
+    //         top: -10px;
+    //         left: 15px;
+    //     }
+    // </style> -->
 </head>
 <body class="light-theme">
     <div class="lab-content">
@@ -107,11 +108,337 @@
             </li>
             <li>Анализ результата
                 <p>Вы увидите, как изменение деформации и жесткости влияет на силу упругости, что наглядно иллюстрирует закон Гука.</p>
-                <div id="box-content">
-                    <div id="box-block">
-                        <div id="box-handle"></div>
-                      </div>
+<!-- Чистая интерактивная пружина -->
+    <div class="spring-interactive" style="margin: 40px 0; padding: 30px; background: #f8f9fa; border-radius: 16px; border: 1px solid #dee2e6;">
+        <h3 style="margin-top: 0; color: #212529; font-size: 1.5rem; text-align: center; margin-bottom: 25px;">
+            Интерактивная демонстрация закона Гука
+        </h3>
+       
+        <div style="display: grid; grid-template-columns: 300px 1fr; gap: 30px;">
+            <!-- Левая панель - управление -->
+            <div>
+                <div style="margin-bottom: 25px;">
+                    <div style="font-weight: 600; color: #495057; margin-bottom: 10px;">Жёсткость пружины (k)</div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
+                        <span style="color: #6c757d; font-size: 0.9rem;">Мягкая</span>
+                        <div style="flex: 1; position: relative;">
+                            <input type="range" min="0.1" max="10" step="0.1" value="1.0" id="physics-stiffness" style="width: 100%; height: 6px; border-radius: 3px; background: linear-gradient(to right, #28a745, #ffc107, #dc3545);">
+                        </div>
+                        <span style="color: #6c757d; font-size: 0.9rem;">Жёсткая</span>
+                    </div>
+                    <div style="text-align: center; font-size: 1.2rem; font-weight: bold; color: #495057; margin-top: 10px;">
+                        <span id="stiffness-value">1.0</span> Н/м
+                    </div>
                 </div>
+               
+                <div style="margin-bottom: 25px;">
+                    <div style="font-weight: 600; color: #495057; margin-bottom: 10px;">Демпфирование</div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
+                        <span style="color: #6c757d; font-size: 0.9rem;">Слабое</span>
+                        <div style="flex: 1; position: relative;">
+                            <input type="range" min="0" max="20" step="1" value="5" id="physics-damping" style="width: 100%; height: 6px; border-radius: 3px; background: linear-gradient(to right, #6c757d, #495057);">
+                        </div>
+                        <span style="color: #6c757d; font-size: 0.9rem;">Сильное</span>
+                    </div>
+                </div>
+               
+                <div style="background: #e9ecef; padding: 20px; border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #6c757d;">Деформация:</span>
+                        <span style="font-weight: bold; color: #495057;" id="physics-deformation">0.00 м</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #6c757d;">Сила упругости:</span>
+                        <span style="font-weight: bold; color: #dc3545;" id="physics-force">0.00 Н</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #6c757d;">Скорость:</span>
+                        <span style="font-weight: bold; color: #0d6efd;" id="physics-velocity">0.00 м/с</span>
+                    </div>
+                </div>
+               
+                <button id="physics-reset" style="width: 100%; padding: 12px; margin-top: 20px; background: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                    Сбросить
+                </button>
+            </div>
+           
+            <!-- Правая панель - визуализация -->
+            <div>
+                <div style="position: relative; height: 400px; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #dee2e6;">
+                    <!-- Крепление сверху -->
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 40px; background: #495057; display: flex; justify-content: center; align-items: flex-end;">
+                        <div style="width: 100px; height: 20px; background: #343a40; border-radius: 0 0 10px 10px;"></div>
+                    </div>
+                   
+                    <!-- Пружина (отрисовывается через canvas) -->
+                    <canvas id="spring-canvas" width="800" height="400" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"></canvas>
+                   
+                    <!-- Груз -->
+                    <div id="physics-weight" style="position: absolute; left: 50%; transform: translateX(-50%); width: 120px; height: 60px; background: linear-gradient(145deg, #495057, #343a40); border-radius: 8px; cursor: grab; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 10;">
+                    </div>
+                   
+                    <!-- Линия равновесия -->
+                    <div style="position: absolute; left: 50%; transform: translateX(-50%); top: 140px; width: 200px; height: 1px; background: #dee2e6;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Добавьте этот скрипт в конец тега <script> -->
+    <script>
+        // Физическая пружина с реалистичным поведением
+        $(document).ready(function() {
+            // Элементы
+            var canvas = document.getElementById('spring-canvas');
+            var ctx = canvas.getContext('2d');
+            var weight = $('#physics-weight');
+            var stiffnessSlider = $('#physics-stiffness');
+            var dampingSlider = $('#physics-damping');
+            var resetBtn = $('#physics-reset');
+           
+            // Физические параметры
+            var stiffness = 1.0;        // Жёсткость (Н/м)
+            var damping = 5;           // Демпфирование
+            var mass = 1.0;            // Масса груза (кг)
+           
+            // Состояние системы
+            var position = 0;          // Текущая позиция (отклонение от нормы в метрах)
+            var velocity = 0;          // Скорость (м/с)
+           
+            // Анимация
+            var animationId = null;
+            var lastTime = null;
+           
+            // Перетаскивание
+            var isDragging = false;
+            var dragStartY = 0;
+            var dragStartPosition = 0;
+            var dragOffset = 0;
+           
+            // Масштаб (пикселей на метр)
+            var scale = 100;
+           
+            // Инициализация
+            function init() {
+                // Устанавливаем размеры canvas
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+               
+                // Начальная позиция груза
+                updateWeightPosition();
+               
+                // Запускаем анимацию
+                if (!animationId) {
+                    animationId = requestAnimationFrame(animate);
+                }
+               
+                // Обновляем значения
+                updateUI();
+            }
+           
+            // Основной цикл анимации
+            function animate(currentTime) {
+                if (!lastTime) lastTime = currentTime;
+                var deltaTime = (currentTime - lastTime) / 1000; // В секундах
+                lastTime = currentTime;
+               
+                // Ограничиваем deltaTime для стабильности
+                if (deltaTime > 0.1) deltaTime = 0.1;
+               
+                // Если не тащим, применяем физику
+                if (!isDragging) {
+                    // Сила упругости (Закон Гука): F = -k * x
+                    var springForce = -stiffness * position;
+                   
+                    // Сила демпфирования: F = -c * v
+                    var dampingForce = -damping * velocity;
+                   
+                    // Суммарная сила
+                    var totalForce = springForce + dampingForce;
+                   
+                    // Ускорение (Второй закон Ньютона): a = F / m
+                    var acceleration = totalForce / mass;
+                   
+                    // Интегрируем скорость и позицию
+                    velocity += acceleration * deltaTime;
+                    position += velocity * deltaTime;
+                }
+               
+                // Отрисовываем
+                draw();
+               
+                // Обновляем UI
+                updateUI();
+                updateWeightPosition();
+               
+                // Продолжаем анимацию
+                animationId = requestAnimationFrame(animate);
+            }
+           
+            // Отрисовка пружины
+            function draw() {
+                // Очищаем canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+               
+                // Координаты
+                var centerX = canvas.width / 2;
+                var topY = 40;
+                var springLength = 100 + position * scale;
+                var bottomY = topY + springLength;
+               
+                // Цвет пружины в зависимости от жёсткости
+                var springColor;
+                if (stiffness < 3) {
+                    springColor = '#28a745';
+                } else if (stiffness < 7) {
+                    springColor = '#ffc107';
+                } else {
+                    springColor = '#dc3545';
+                }
+               
+                // Рисуем пружину как спираль
+                ctx.beginPath();
+                ctx.strokeStyle = springColor;
+                ctx.lineWidth = 4;
+                ctx.lineCap = 'round';
+               
+                var coils = 10;
+                var coilHeight = springLength / coils;
+                var coilRadius = 20;
+               
+                for (var i = 0; i <= coils; i++) {
+                    var y = topY + i * coilHeight;
+                    var x = centerX + Math.sin(i * Math.PI) * coilRadius;
+                   
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+               
+                ctx.stroke();
+               
+                // Рисуем верхнее крепление
+                ctx.beginPath();
+                ctx.fillStyle = '#6c757d';
+                ctx.rect(centerX - 10, topY - 5, 20, 10);
+                ctx.fill();
+            }
+           
+            // Обновление позиции груза
+            function updateWeightPosition() {
+                var topY = 40;
+                var springLength = 100 + position * scale;
+                var weightTop = topY + springLength;
+               
+                weight.css('top', weightTop + 'px');
+            }
+           
+            // Обновление UI
+            function updateUI() {
+                $('#stiffness-value').text(stiffness.toFixed(1));
+                $('#physics-deformation').text(Math.abs(position).toFixed(2) + ' м');
+                $('#physics-force').text(Math.abs(stiffness * position).toFixed(2) + ' Н');
+                $('#physics-velocity').text(Math.abs(velocity).toFixed(2) + ' м/с');
+            }
+           
+            // Обработчики событий для перетаскивания
+            weight.on('mousedown touchstart', function(e) {
+                e.preventDefault();
+                isDragging = true;
+               
+                var eventY = e.type === 'touchstart' ? e.originalEvent.touches[0].clientY : e.clientY;
+                dragStartY = eventY;
+                dragStartPosition = position;
+                dragOffset = 0;
+               
+                weight.css('cursor', 'grabbing');
+                weight.css('background', 'linear-gradient(145deg, #dc3545, #c82333)');
+               
+                $(document).on('mousemove touchmove', onDragMove);
+                $(document).on('mouseup touchend', onDragEnd);
+            });
+           
+            function onDragMove(e) {
+                if (!isDragging) return;
+               
+                var eventY = e.type === 'touchmove' ? e.originalEvent.touches[0].clientY : e.clientY;
+                var deltaY = eventY - dragStartY;
+               
+                // Применяем сопротивление в зависимости от жёсткости
+                // Чем больше жёсткость, тем сложнее тянуть
+                var resistance = 1 + stiffness * 0.5;
+                dragOffset = deltaY / (scale * resistance);
+               
+                // Ограничиваем максимальную деформацию
+                dragOffset = Math.max(-2, Math.min(dragOffset, 2));
+               
+                position = dragStartPosition + dragOffset;
+                velocity = 0;
+               
+                updateUI();
+                updateWeightPosition();
+            }
+           
+            function onDragEnd() {
+                if (!isDragging) return;
+               
+                isDragging = false;
+                weight.css('cursor', 'grab');
+                weight.css('background', 'linear-gradient(145deg, #495057, #343a40)');
+               
+                $(document).off('mousemove touchmove', onDragMove);
+                $(document).off('mouseup touchend', onDragEnd);
+               
+                velocity = 0;
+            }
+           
+            // Обработчики слайдеров
+            stiffnessSlider.on('input', function() {
+                stiffness = parseFloat($(this).val());
+                updateUI();
+            });
+           
+            dampingSlider.on('input', function() {
+                damping = parseFloat($(this).val());
+            });
+           
+            // Кнопка сброса
+            resetBtn.click(function() {
+                position = 0;
+                velocity = 0;
+                updateUI();
+                updateWeightPosition();
+            });
+           
+            // Обработка изменения размеров окна
+            $(window).on('resize', function() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+                draw();
+            });
+           
+            // Связь с основными ползунками
+            $('#kRange').on('input', function() {
+                var value = parseFloat($(this).val());
+                stiffnessSlider.val(value);
+                stiffness = value;
+                updateUI();
+            });
+           
+            $('#xRange').on('input', function() {
+                var value = parseFloat($(this).val());
+                position = value;
+                velocity = 0;
+                updateUI();
+                updateWeightPosition();
+            });
+           
+            // Инициализация
+            init();
+        });
+    </script>
             </li>
         </ol>
 

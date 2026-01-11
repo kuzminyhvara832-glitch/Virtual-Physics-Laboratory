@@ -74,6 +74,352 @@
                 <p>Можно увидеть, как изменение массы и ускорения влияет на силу, что наглядно иллюстрирует второй закон Ньютона.</p>
             </li>
         </ol>
+        <div class="newton-interactive" style="margin: 40px 0; padding: 30px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 16px; border: 1px solid #dee2e6; box-shadow: 0 8px 25px rgba(0,0,0,0.08);">
+            <h3 style="margin-top: 0; color: #0d6efd; font-size: 1.5rem; text-align: center; margin-bottom: 25px;">
+                Интерактивная демонстрация: Сила = Масса × Ускорение
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 25px;">
+                <div>
+                    <h4 style="color: #495057; margin-bottom: 15px;">Параметры системы</h4>
+                    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #6c757d; font-weight: 500;">Масса тележки:</span>
+                                <span style="color: #0d6efd; font-weight: bold; font-size: 1.1rem;" id="cart-mass-display">1.0 кг</span>
+                            </div>
+                            <input type="range" min="0.5" max="5" step="0.1" value="1.0" id="cart-mass-slider" style="width: 100%; height: 8px; border-radius: 4px; background: linear-gradient(to right, #6c757d, #0d6efd);">
+                            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                <small style="color: #adb5bd;">0.5 кг</small>
+                                <small style="color: #adb5bd;">5 кг</small>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #6c757d; font-weight: 500;">Приложенная сила:</span>
+                                <span style="color: #dc3545; font-weight: bold; font-size: 1.1rem;" id="applied-force-display">1.0 Н</span>
+                            </div>
+                            <input type="range" min="0.5" max="10" step="0.1" value="1.0" id="force-slider" style="width: 100%; height: 8px; border-radius: 4px; background: linear-gradient(to right, #6c757d, #dc3545);">
+                            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                <small style="color: #adb5bd;">0.5 Н</small>
+                                <small style="color: #adb5bd;">10 Н</small>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #e7f1ff; padding: 15px; border-radius: 8px; margin-top: 25px; text-align: center;">
+                            <div style="color: #0d6efd; font-weight: 600; margin-bottom: 5px;">Расчетное ускорение:</div>
+                            <div style="font-size: 1.8rem; font-weight: bold; color: #198754;" id="calculated-acceleration">1.0 м/с²</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 style="color: #495057; margin-bottom: 15px;">Визуализация движения</h4>
+                    <div style="position: relative; height: 200px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden;">
+                        <!-- Дорожка -->
+                        <div style="position: absolute; bottom: 60px; left: 20px; right: 20px; height: 4px; background: linear-gradient(to right, #dee2e6, #adb5bd); border-radius: 2px;"></div>
+                        
+                        <!-- Тележка --><div id="newton-cart" style="position: absolute; bottom: 40px; left: 30px; width: 80px; height: 50px; background: linear-gradient(145deg, #0d6efd, #0a58ca); border-radius: 8px; box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3); transition: left 0.05s linear, transform 0.2s ease;">
+                            <!-- Колеса -->
+                            <div style="position: absolute; bottom: -10px; left: 10px; width: 20px; height: 20px; background: #212529; border-radius: 50%;"></div>
+                            <div style="position: absolute; bottom: -10px; right: 10px; width: 20px; height: 20px; background: #212529; border-radius: 50%;"></div>
+                            <!-- Масса -->
+                            <div style="position: absolute; top: 5px; left: 0; right: 0; text-align: center; color: white; font-weight: bold; font-size: 0.9rem;" id="cart-mass-label">1.0 кг</div>
+                        </div>
+                        
+                        <!-- Стрелка силы -->
+                        <div id="force-arrow-container" style="position: absolute; bottom: 70px; left: 120px; display: flex; align-items: center; opacity: 0; transition: opacity 0.3s ease;">
+                            <div id="force-arrow" style="width: 0; height: 0; border-left: 30px solid #dc3545; border-top: 12px solid transparent; border-bottom: 12px solid transparent; margin-right: 5px;"></div>
+                            <div id="force-label" style="background: #dc3545; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem; font-weight: bold;">1.0 Н</div>
+                        </div>
+                        
+                        <!-- Стартовая линия -->
+                        <div style="position: absolute; bottom: 40px; left: 30px; top: 20px; width: 2px; background: #198754; border-radius: 1px;"></div>
+                        <div style="position: absolute; bottom: 35px; left: 20px; color: #198754; font-size: 0.8rem; font-weight: bold;">Старт</div>
+                        
+                        <!-- Финишная линия -->
+                        <div style="position: absolute; bottom: 40px; right: 30px; top: 20px; width: 2px; background: #dc3545; border-radius: 1px;"></div>
+                        <div style="position: absolute; bottom: 35px; right: 20px; color: #dc3545; font-size: 0.8rem; font-weight: bold;">Финиш</div>
+                        
+                        <!-- Скорость -->
+                        <div id="speed-indicator" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: #ffc107; color: #212529; padding: 8px 15px; border-radius: 20px; font-weight: bold; display: none;">
+                            Скорость: <span id="speed-value">0</span> м/с
+                        </div>
+                    </div>
+                    
+                    <!-- Управление -->
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <button id="start-btn" style="flex: 1; padding: 14px; background: linear-gradient(145deg, #198754, #157347); color: white; border: none; border-radius: 10px; font-weight: 600; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3); transition: all 0.2s ease;">
+                            ▶ Запустить движение
+                        </button>
+                        <button id="reset-btn" style="flex: 1; padding: 14px; background: linear-gradient(145deg, #6c757d, #495057); color: white; border: none; border-radius: 10px; font-weight: 600; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3); transition: all 0.2s ease;">
+                            ⟲ Сброс
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Информационная панель -->
+            <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 20px;"><div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: #6c757d; margin-bottom: 5px;">Масса</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #0d6efd;" id="info-mass">1.0 кг</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: #6c757d; margin-bottom: 5px;">Сила</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #dc3545;" id="info-force">1.0 Н</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: #6c757d; margin-bottom: 5px;">Ускорение</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #198754;" id="info-acceleration">1.0 м/с²</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e9ecef;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #0d6efd;"></div>
+                        <span style="font-size: 0.9rem; color: #495057;">Большая масса → медленнее движение</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;">
+                        <div style="width: 12px; height: 12px; border-radius: 50%; background: #dc3545;"></div>
+                        <span style="font-size: 0.9rem; color: #495057;">Большая сила → быстрее движение</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </ol>
+    <script>
+        $(document).ready(function() {
+            // Элементы
+            var cart = $("#newton-cart");
+            var forceArrow = $("#force-arrow-container");
+            var startBtn = $("#start-btn");
+            var resetBtn = $("#reset-btn");
+            var massSlider = $("#cart-mass-slider");
+            var forceSlider = $("#force-slider");
+            var speedIndicator = $("#speed-indicator");
+            
+            // Переменные
+            var isAnimating = false;
+            var animationInterval;
+            var currentSpeed = 0;
+            var currentPosition = 30;
+            var trackLength = 400;
+            
+            // Инициализация значений
+            function initializeValues() {
+                updateMass();
+                updateForce();
+                calculateAcceleration();
+                updateInfoPanel();
+                resetCart();
+            }
+            
+            // Обновление массы
+            function updateMass() {
+                var mass = parseFloat(massSlider.val());
+                $("#cart-mass-display").text(mass.toFixed(1) + " кг");
+                $("#cart-mass-label").text(mass.toFixed(1) + " кг");
+                $("#info-mass").text(mass.toFixed(1) + " кг");
+                
+                // Изменение размера тележки в зависимости от массы
+                var cartWidth = 60 + (mass * 4);
+                var cartHeight = 40 + (mass * 2);
+                cart.css({
+                    width: cartWidth + "px",
+                    height: cartHeight + "px"
+                });
+                
+                calculateAcceleration();
+            }
+            
+            // Обновление силы
+            function updateForce() {
+                var force = parseFloat(forceSlider.val());
+                $("#applied-force-display").text(force.toFixed(1) + " Н");
+                $("#force-label").text(force.toFixed(1) + " Н");
+                $("#info-force").text(force.toFixed(1) + " Н");// Изменение размера стрелки в зависимости от силы
+                var arrowSize = 20 + (force * 2);
+                $("#force-arrow").css("border-left-width", arrowSize + "px");
+                
+                calculateAcceleration();
+            }
+            
+            // Расчет ускорения
+            function calculateAcceleration() {
+                var mass = parseFloat(massSlider.val());
+                var force = parseFloat(forceSlider.val());
+                var acceleration = force / mass;
+                
+                $("#calculated-acceleration").text(acceleration.toFixed(2) + " м/с²");
+                $("#info-acceleration").text(acceleration.toFixed(2) + " м/с²");
+                
+                return acceleration;
+            }
+            
+            // Обновление информационной панели
+            function updateInfoPanel() {
+                var mass = parseFloat(massSlider.val());
+                var force = parseFloat(forceSlider.val());
+                var acceleration = calculateAcceleration();
+                
+                $("#info-mass").text(mass.toFixed(1) + " кг");
+                $("#info-force").text(force.toFixed(1) + " Н");
+                $("#info-acceleration").text(acceleration.toFixed(2) + " м/с²");
+            }
+            
+            // Сброс тележки
+            function resetCart() {
+                if (animationInterval) clearInterval(animationInterval);
+                isAnimating = false;
+                currentSpeed = 0;
+                currentPosition = 30;
+                
+                cart.css({
+                    left: currentPosition + "px",
+                    transform: "scale(1)"
+                });
+                
+                forceArrow.css("opacity", "0");
+                speedIndicator.hide();
+                startBtn.text("▶ Запустить движение");
+                startBtn.css({
+                    background: "linear-gradient(145deg, #198754, #157347)",
+                    transform: "scale(1)"
+                });
+                
+                $("#speed-value").text("0");
+            }
+            
+            // Запуск движения
+            function startMovement() {
+                if (isAnimating) return;
+                
+                isAnimating = true;
+                startBtn.text("⏸ Движется...");
+                startBtn.css({
+                    background: "linear-gradient(145deg, #0d6efd, #0a58ca)",
+                    transform: "scale(0.98)"
+                });
+                
+                forceArrow.css("opacity", "1");
+                speedIndicator.show();
+                
+                var mass = parseFloat(massSlider.val());
+                var force = parseFloat(forceSlider.val());
+                var acceleration = force / mass;
+                
+                animationInterval = setInterval(function() {
+                    // Обновляем скорость по формуле v = a * t
+                    currentSpeed += acceleration * 0.1;
+                    
+                    // Обновляем позицию по формуле s = v * t
+                    currentPosition += currentSpeed * 2;
+                    
+                    // Обновляем визуальные элементы
+                    cart.css("left", currentPosition + "px");
+                    forceArrow.css("left", (currentPosition + cart.width() + 10) + "px");
+                    
+                    // Эффект ускорения
+                    var scale = 1 + (currentSpeed * 0.02);
+                    cart.css("transform", "scale(" + Math.min(scale, 1.1) + ")");
+                    
+                    // Обновляем индикатор скорости
+                    $("#speed-value").text(currentSpeed.toFixed(1));
+                    
+                    // Проверка на финиш
+                    if (currentPosition >= trackLength) {
+                        clearInterval(animationInterval);
+                        isAnimating = false;
+                        startBtn.text("✓ Достигнут финиш!");
+                        startBtn.css({background: "linear-gradient(145deg, #6f42c1, #5a32a3)",
+                            transform: "scale(1)"
+                        });
+                        
+                        // Эффект прибытия
+                        cart.css("transform", "scale(1.05)");
+                        setTimeout(function() {
+                            cart.css("transform", "scale(1)");
+                        }, 300);
+                    }
+                }, 50);
+            }
+            
+            // Обработчики событий
+            massSlider.on("input", function() {
+                updateMass();
+                if (!isAnimating) {
+                    resetCart();
+                }
+            });
+            
+            forceSlider.on("input", function() {
+                updateForce();
+                if (!isAnimating) {
+                    resetCart();
+                }
+            });
+            
+            startBtn.click(function() {
+                if (isAnimating) {
+                    // Пауза
+                    clearInterval(animationInterval);
+                    isAnimating = false;
+                    startBtn.text("▶ Продолжить");
+                    startBtn.css({
+                        background: "linear-gradient(145deg, #198754, #157347)",
+                        transform: "scale(1)"
+                    });
+                } else {
+                    // Старт/продолжение
+                    if (currentPosition >= trackLength) {
+                        resetCart();
+                    }
+                    startMovement();
+                }
+            });
+            
+            resetBtn.click(function() {
+                resetCart();
+                // Анимация кнопки
+                $(this).css("transform", "scale(0.95)");
+                setTimeout(function() {
+                    resetBtn.css("transform", "scale(1)");
+                }, 150);
+            });
+            
+            // Эффекты наведения
+            startBtn.hover(
+                function() { if (!isAnimating) $(this).css("transform", "scale(1.02)"); },
+                function() { if (!isAnimating) $(this).css("transform", "scale(1)"); }
+            );
+            
+            resetBtn.hover(
+                function() { $(this).css("transform", "scale(1.02)"); },
+                function() { $(this).css("transform", "scale(1)"); }
+            );
+            
+            // Инициализация
+            initializeValues();
+            
+            // Связь с основными ползунками
+            $("#newton-mass-slider").on("input", function() {
+                var value = parseFloat($(this).val());
+                massSlider.val(value);
+                updateMass();
+            });
+            
+            $("#newton-acceleration-slider").on("input", function() {
+                var accel = parseFloat($(this).val());
+                var mass = parseFloat(massSlider.val());
+                var force = accel * mass;
+                forceSlider.val(force.toFixed(1));
+                updateForce();
+            });
+        });
+    </script>
 
         <h2 class="text-newton2">Вывод</h2>
 
