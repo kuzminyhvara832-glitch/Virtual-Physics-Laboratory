@@ -1,8 +1,340 @@
-<body class="light-theme">
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: white;
+        }
+        
+        .lab-content {
+            width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+        }
+        
+        .text-lab-title {
+            color: #0d6efd;
+            font-size: 28px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #0d6efd;
+        }
+        
+        .text-lab-subtitle {
+            color: #495057;
+            font-size: 22px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .text-lab-content {
+            color: #495057;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .formula {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .formula-text {
+            font-family: 'Times New Roman', serif;
+            font-size: 36px;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+        
+        .definitions {
+            background: #f8f9fa;
+            padding: 20px 20px 20px 40px;
+            border-radius: 8px;
+            margin: 20px 0;
+            list-style: none;
+        }
+        
+        .definitions li {
+            padding: 8px 0;
+            color: #495057;
+            font-size: 16px;
+            position: relative;
+        }
+        
+        .definitions li:before {
+            content: "•";
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 20px;
+            position: absolute;
+            left: -20px;
+        }
+        
+        .slider-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 1px solid #e9ecef;
+        }
+        
+        .slider-section p {
+            margin: 15px 0 8px;
+            color: #495057;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .result-box {
+            background: #ffeaea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border: 2px solid #ff6b6b;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .result-box p {
+            margin: 0;
+            color: #ff6b6b;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e9ecef;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .kinetic-interactive {
+            margin: 40px 0;
+            padding: 30px;
+            background: white;
+        }
+        
+        .interactive-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .control-panel {
+            background: white;
+            padding: 20px;
+        }
+        
+        .control-group {
+            margin-bottom: 25px;
+        }
+        
+        .control-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .slider-labels {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+        
+        .slider-labels span {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .slider-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .value-display {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #495057;
+            margin-top: 10px;
+        }
+        
+        .stats-panel {
+            background: white;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ced4da;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        
+        button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+        
+        .visualization-container {
+            position: relative;
+            height: 300px;
+            background: white;
+            border: 2px solid #dee2e6;
+            overflow: hidden;
+        }
+        
+        .track {
+            position: absolute;
+            bottom: 100px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #6c757d;
+        }
+        
+        #ball {
+            position: absolute;
+            bottom: 80px;
+            left: 50px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #ff4757);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .energy-bar-container {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 20px;
+            height: 260px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .energy-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, #4cd964, #ff6b6b);
+            border-radius: 10px;
+            transition: height 0.3s ease;
+        }
+        
+        .energy-label {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .speedometer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #6c757d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #ff6b6b;
+            background: white;
+        }
+        
+        .ruler-mark {
+            position: absolute;
+            bottom: 100px;
+            width: 1px;
+            height: 10px;
+            background: #6c757d;
+        }
+        
+        .ruler-number {
+            position: absolute;
+            bottom: 80px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .obstacle {
+            position: absolute;
+            bottom: 100px;
+            width: 30px;
+            height: 60px;
+            background: linear-gradient(to right, #495057, #343a40);
+            border-radius: 4px;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
     <div class="lab-content">
         <h1 class="text-lab-title">Лабораторная работа по Кинетической энергии</h1>
 
-        <p class="text-lab-description">В ходе виртуальной лабораторной работы будет исследоваться энергия движущегося тела на основе формулы кинетической энергии, которая описывает зависимость энергии от массы и скорости тела.</p>
+        <p class="text-lab-content">В ходе виртуальной лабораторной работы будет исследоваться энергия движущегося тела на основе формулы кинетической энергии, которая описывает зависимость энергии от массы и скорости тела.</p>
 
         <h2 class="text-lab-subtitle">Ход работы</h2>
 
@@ -14,19 +346,19 @@
                 </div>
                 <p>где</p>
                 <ul class="definitions">
-                    <li><b>Eₖ</b> — кинетическая энергия (Дж)</li>
-                    <li><b>m</b> — масса (кг)</li>
-                    <li><b>v</b> — скорость (м/с)</li>
+                    <li><b>Eₖ</b> — кинетическая энергия (Дж, джоули)</li>
+                    <li><b>m</b> — масса тела (кг)</li>
+                    <li><b>v</b> — скорость тела (м/с)</li>
                 </ul>
             </li>
             <li>Настройка параметров
                 <p>Пользователь изменяет значения массы и скорости, перемещая ползунки.</p>
                 <div class="slider-section">
-                    <p>Масса (m): <span id="mass-value">1</span> кг</p>
-                    <input type="range" min="0" max="100" step="0.1" value="1" id="mass-slider">
+                    <p>Масса тела (m): <span id="mass-value">1</span> кг</p>
+                    <input type="range" min="0.1" max="10" step="0.1" value="1" id="mass-slider">
                     
                     <p>Скорость (v): <span id="velocity-value">0</span> м/с</p>
-                    <input type="range" min="0" max="50" step="0.1" value="0" id="velocity-slider">
+                    <input type="range" min="0" max="30" step="0.1" value="0" id="velocity-slider">
                 </div>
             </li>
             <li>Наблюдение за результатом
@@ -36,37 +368,316 @@
                 </div>
             </li>
             <li>Анализ результата
-                <p>Можно увидеть, как изменение массы и скорости влияет на кинетическую энергию, что наглядно иллюстрирует квадратичную зависимость энергии от скорости.</p>
+                <p>Можно увидеть, как изменение массы и скорости влияет на кинетическую энергию.</p>
+
+                <div class="kinetic-interactive">
+                    <h3 style="margin-top: 0; color: #212529; font-size: 1.5rem; text-align: center; margin-bottom: 25px;">
+                        Интерактивная демонстрация кинетической энергии
+                    </h3>
+                   
+                    <div class="interactive-grid">
+                        <div class="control-panel">
+                            <div class="control-group">
+                                <div class="control-label">Масса шара (m)</div>
+                                <div class="slider-labels">
+                                    <span>Лёгкий</span>
+                                    <div class="slider-container">
+                                        <input type="range" style="background: linear-gradient(to right, #4cd964, #ff6b6b);" min="0.1" max="10" step="0.1" value="1.0" id="interactive-mass">
+                                    </div>
+                                    <span>Тяжёлый</span>
+                                </div>
+                                <div class="value-display">
+                                    <span id="interactive-mass-value">1.0</span> кг
+                                </div>
+                            </div>
+                           
+                            <div class="control-group">
+                                <div class="control-label">Скорость (v)</div>
+                                <div class="slider-labels">
+                                    <span>0 м/с</span>
+                                    <div class="slider-container">
+                                        <input type="range" style="background: linear-gradient(to right, #4cd964, #ff6b6b);" min="0" max="30" step="0.1" value="0" id="interactive-velocity">
+                                    </div>
+                                    <span>30 м/с</span>
+                                </div>
+                                <div class="value-display">
+                                    <span id="interactive-velocity-value">0</span> м/с
+                                </div>
+                            </div>
+                           
+                            <div class="stats-panel">
+                                <div class="stat-item">
+                                    <span class="stat-label">Кинетическая энергия:</span>
+                                    <span class="stat-value" style="color: #ff6b6b;" id="interactive-energy">0.00 Дж</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Импульс:</span>
+                                    <span class="stat-value" style="color: #0d6efd;" id="interactive-momentum">0.00 кг·м/с</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Расстояние за 1 сек:</span>
+                                    <span class="stat-value" style="color: #20c997;" id="interactive-distance">0.00 м</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button id="launch-btn">
+                                    ▶ Запустить
+                                </button>
+                                <button id="reset-btn">
+                                    ⟲ Сброс
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="visualization-container" id="visualization">
+                                <div class="track"></div>
+                                <div id="ball"></div>
+                                
+                                <div class="energy-bar-container">
+                                    <div class="energy-bar" id="energy-bar" style="height: 0%;"></div>
+                                </div>
+                                <div class="energy-label" id="energy-label">0 Дж</div>
+                                
+                                <div class="speedometer" id="speedometer">
+                                    0
+                                </div>
+                                
+                                <div class="ruler-mark" style="left: 50px;"></div>
+                                <div class="ruler-number" style="left: 45px;">0</div>
+                                
+                                <div class="ruler-mark" style="left: 200px;"></div>
+                                <div class="ruler-number" style="left: 195px;">5</div>
+                                
+                                <div class="ruler-mark" style="left: 350px;"></div>
+                                <div class="ruler-number" style="left: 345px;">10</div>
+                                
+                                <div class="ruler-mark" style="left: 500px;"></div>
+                                <div class="ruler-number" style="left: 495px;">15</div>
+                                
+                                <div class="obstacle" id="obstacle" style="left: 400px;"></div>
+                            </div>
+                            
+                            <div style="text-align: center; color: #6c757d; font-size: 0.85rem; margin-top: 10px;">
+                                <em>Перетащите препятствие на дорожке. Увеличьте скорость!</em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </li>
         </ol>
 
         <h2 class="text-lab-subtitle">Вывод</h2>
 
-        <p class="text-lab-description">В этой лабораторной работе пользователь экспериментальным путём изучит, что кинетическая энергия пропорциональна массе тела и квадрату его скорости. Такая практика помогает лучше понять энергетические характеристики движущихся объектов.</p>
+        <p class="text-lab-content">В этой лабораторной работе пользователь экспериментальным путём изучит, что кинетическая энергия пропорциональна массе тела и квадрату его скорости. Такая практика помогает лучше понять энергетические характеристики движущихся объектов.</p>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        var mass = 1;
-        var velocity = 0;
-        
-        function calculator(){
-            $("#kinetic-energy-value").text(((mass * velocity * velocity) / 2).toFixed(2));
-        }
-        
-        $(document).ready(function(){
-            $("#mass-slider").on("input", function(){
-                mass = $(this).val();
-                $("#mass-value").text(mass);
-                calculator();
-            });
+        $(function() {
+            // Глобальные переменные
+            let mass = 1.0;
+            let velocity = 0;
+            let kineticEnergy = 0;
+            let isMoving = false;
+            let animationId = null;
+            let ballPosition = 50;
+            let ball = $('#ball');
+            let obstacle = $('#obstacle');
 
-            $("#velocity-slider").on("input", function(){
-                velocity = $(this).val();
-                $("#velocity-value").text(velocity);
-                calculator();
+            updateValues();
+            makeObstacleDraggable();
+            
+            function updateValues() {
+                mass = parseFloat($('#mass-slider').val());
+                velocity = parseFloat($('#velocity-slider').val());
+                kineticEnergy = (mass * velocity * velocity) / 2;
+                
+                // Обновляем отображение
+                $('#mass-value').text(mass.toFixed(1));
+                $('#velocity-value').text(velocity.toFixed(1));
+                $('#kinetic-energy-value').text(kineticEnergy.toFixed(2));
+                
+                $('#interactive-mass').val(mass);
+                $('#interactive-velocity').val(velocity);
+                
+                updateInteractiveValues();
+            }
+            
+            function updateInteractiveValues() {
+                mass = parseFloat($('#interactive-mass').val());
+                velocity = parseFloat($('#interactive-velocity').val());
+                kineticEnergy = (mass * velocity * velocity) / 2;
+                const momentum = mass * velocity;
+                const distance = velocity;
+                
+                $('#interactive-mass-value').text(mass.toFixed(1));
+                $('#interactive-velocity-value').text(velocity.toFixed(1));
+                $('#interactive-energy').text(kineticEnergy.toFixed(2) + ' Дж');
+                $('#interactive-momentum').text(momentum.toFixed(2) + ' кг·м/с');
+                $('#interactive-distance').text(distance.toFixed(2) + ' м');
+                $('#speedometer').text(velocity.toFixed(0));
+                
+                $('#mass-slider').val(mass);
+                $('#velocity-slider').val(velocity);
+                $('#mass-value').text(mass.toFixed(1));
+                $('#velocity-value').text(velocity.toFixed(1));
+                $('#kinetic-energy-value').text(kineticEnergy.toFixed(2));
+            
+                updateBall();
+                updateEnergyBar();
+            }
+            
+            function updateBall() {
+                const ballSize = 40 + (mass * 2);
+                const ballBottom = 80 - (ballSize - 60) / 2;
+                
+                ball.css({
+                    width: ballSize + 'px',
+                    height: ballSize + 'px',
+                    bottom: ballBottom + 'px'
+                });
+                
+                // Цвет шара зависит от скорости
+                if (velocity < 10) {
+                    ball.css('background', 'radial-gradient(circle at 30% 30%, #ff6b6b, #ff4757)');
+                } else if (velocity < 20) {
+                    ball.css('background', 'radial-gradient(circle at 30% 30%, #ffa502, #ff7f00)');
+                } else {
+                    ball.css('background', 'radial-gradient(circle at 30% 30%, #ff3838, #ff0000)');
+                }
+            }
+            
+            function updateEnergyBar() {
+                const maxEnergy = 10 * 30 * 30 / 2;
+                const energyPercent = Math.min((kineticEnergy / maxEnergy) * 100, 100);
+                
+                $('#energy-bar').css('height', energyPercent + '%');
+                $('#energy-label').text(kineticEnergy.toFixed(0) + ' Дж');
+            }
+            
+            function launchBall() {
+                if (isMoving || velocity === 0) {
+                    return;
+                }
+                
+                isMoving = true;
+                $('#launch-btn').text('▶ Движется...').css('background', '#ff5252');
+                ballPosition = 50;
+                
+                animationId = requestAnimationFrame(function animate() {
+                    if (!isMoving) {
+                        return;
+                    }
+                    
+                    // Двигаем шар
+                    ballPosition += velocity * 5;
+                    
+                    // Проверяем столкновение с препятствием
+                    const obstacleLeft = parseInt(obstacle.css('left'));
+                    const ballWidth = parseInt(ball.width());
+                    
+                    if (ballPosition + ballWidth > obstacleLeft && ballPosition < obstacleLeft + 30) {
+                        handleCollision();
+                        return;
+                    }
+                    
+                    // Проверяем достижение конца
+                    if (ballPosition > 550) {
+                        stopBall();
+                        return;
+                    }
+
+                    ball.css('left', ballPosition + 'px');
+                    
+                    animationId = requestAnimationFrame(animate);
+                });
+            }
+            
+            function handleCollision() {
+                isMoving = false;
+                
+                ball.css('transform', 'scale(0.9)');
+                setTimeout(() => ball.css('transform', 'scale(1)'), 100);
+                
+                // Уменьшаем скорость после столкновения
+                velocity *= 0.7;
+                $('#interactive-velocity').val(velocity);
+                updateInteractiveValues();
+                
+                cancelAnimationFrame(animationId);
+                $('#launch-btn').text('▶ Запустить').css('background', '#ff6b6b');
+            }
+            
+            function stopBall() {
+                isMoving = false;
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+                $('#launch-btn').text('▶ Запустить').css('background', '#ff6b6b');
+            }
+            
+            function resetBall() {
+                stopBall();
+                ballPosition = 50;
+                ball.css('left', ballPosition + 'px');
+            }
+            
+            function makeObstacleDraggable() {
+                let isDragging = false;
+                let startX = 0;
+                let startLeft = 0;
+                
+                obstacle.on('mousedown', function(e) {
+                    e.preventDefault();
+                    isDragging = true;
+                    
+                    startX = e.clientX;
+                    startLeft = parseInt(obstacle.css('left')) || 400;
+                    
+                    obstacle.css('cursor', 'grabbing');
+                    
+                    $(document).on('mousemove', function(e) {
+                        if (!isDragging) return;
+                        
+                        let deltaX = e.clientX - startX;
+                        let newLeft = startLeft + deltaX;
+                        
+                        newLeft = Math.max(100, Math.min(newLeft, 520));
+                        obstacle.css('left', newLeft + 'px');
+                    });
+                    
+                    $(document).on('mouseup', function() {
+                        if (!isDragging) return;
+                        
+                        isDragging = false;
+                        obstacle.css('cursor', 'move');
+                        
+                        $(document).off('mousemove');
+                        $(document).off('mouseup');
+                    });
+                });
+            }
+            
+            $('#mass-slider, #velocity-slider').on('input', updateValues);
+            $('#interactive-mass, #interactive-velocity').on('input', updateInteractiveValues);
+            
+            $('#launch-btn').click(function() {
+                if (!isMoving) {
+                    launchBall();
+                } else {
+                    stopBall();
+                }
             });
             
-            calculator();
+            $('#reset-btn').click(function() {
+                resetBall();
+                velocity = 0;
+                $('#interactive-velocity').val(0);
+                updateInteractiveValues();
+            });
         });
     </script>
 </body>
+</html>

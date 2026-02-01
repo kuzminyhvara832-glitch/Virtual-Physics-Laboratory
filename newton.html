@@ -201,14 +201,12 @@
             var forceSlider = $("#force-slider");
             var speedIndicator = $("#speed-indicator");
             
-            // Переменные
             var isAnimating = false;
             var animationInterval;
             var currentSpeed = 0;
             var currentPosition = 30;
             var trackLength = 400;
             
-            // Инициализация значений
             function initializeValues() {
                 updateMass();
                 updateForce();
@@ -235,12 +233,11 @@
                 calculateAcceleration();
             }
             
-            // Обновление силы
             function updateForce() {
                 var force = parseFloat(forceSlider.val());
                 $("#applied-force-display").text(force.toFixed(1) + " Н");
                 $("#force-label").text(force.toFixed(1) + " Н");
-                $("#info-force").text(force.toFixed(1) + " Н");// Изменение размера стрелки в зависимости от силы
+                $("#info-force").text(force.toFixed(1) + " Н");
                 var arrowSize = 20 + (force * 2);
                 $("#force-arrow").css("border-left-width", arrowSize + "px");
                 
@@ -325,11 +322,9 @@
                     // Эффект ускорения
                     var scale = 1 + (currentSpeed * 0.02);
                     cart.css("transform", "scale(" + Math.min(scale, 1.1) + ")");
-                    
-                    // Обновляем индикатор скорости
+
                     $("#speed-value").text(currentSpeed.toFixed(1));
-                    
-                    // Проверка на финиш
+
                     if (currentPosition >= trackLength) {
                         clearInterval(animationInterval);
                         isAnimating = false;
@@ -338,7 +333,6 @@
                             transform: "scale(1)"
                         });
                         
-                        // Эффект прибытия
                         cart.css("transform", "scale(1.05)");
                         setTimeout(function() {
                             cart.css("transform", "scale(1)");
@@ -347,7 +341,6 @@
                 }, 50);
             }
             
-            // Обработчики событий
             massSlider.on("input", function() {
                 updateMass();
                 if (!isAnimating) {
@@ -364,7 +357,6 @@
             
             startBtn.click(function() {
                 if (isAnimating) {
-                    // Пауза
                     clearInterval(animationInterval);
                     isAnimating = false;
                     startBtn.text("▶ Продолжить");
@@ -373,7 +365,6 @@
                         transform: "scale(1)"
                     });
                 } else {
-                    // Старт/продолжение
                     if (currentPosition >= trackLength) {
                         resetCart();
                     }
@@ -390,7 +381,6 @@
                 }, 150);
             });
             
-            // Эффекты наведения
             startBtn.hover(
                 function() { if (!isAnimating) $(this).css("transform", "scale(1.02)"); },
                 function() { if (!isAnimating) $(this).css("transform", "scale(1)"); }
@@ -401,10 +391,8 @@
                 function() { $(this).css("transform", "scale(1)"); }
             );
             
-            // Инициализация
             initializeValues();
             
-            // Связь с основными ползунками
             $("#newton-mass-slider").on("input", function() {
                 var value = parseFloat($(this).val());
                 massSlider.val(value);

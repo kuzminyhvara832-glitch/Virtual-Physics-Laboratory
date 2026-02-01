@@ -3,12 +3,647 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: white;
+        }
+        
+        .lab-content {
+            width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+        }
+        
+        .text-lab-title {
+            color: #0d6efd;
+            font-size: 28px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #0d6efd;
+        }
+        
+        .text-lab-subtitle {
+            color: #495057;
+            font-size: 22px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .text-lab-content {
+            color: #495057;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .formula {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            border-left: 5px solid #20c997;
+        }
+        
+        .formula-text {
+            font-family: 'Times New Roman', serif;
+            font-size: 36px;
+            font-weight: bold;
+            color: #20c997;
+        }
+        
+        .definitions {
+            background: #f8f9fa;
+            padding: 20px 20px 20px 40px;
+            border-radius: 8px;
+            margin: 20px 0;
+            list-style: none;
+        }
+        
+        .definitions li {
+            padding: 8px 0;
+            color: #495057;
+            font-size: 16px;
+            position: relative;
+        }
+        
+        .definitions li:before {
+            content: "•";
+            color: #20c997;
+            font-weight: bold;
+            font-size: 20px;
+            position: absolute;
+            left: -20px;
+        }
+        
+        .slider-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 1px solid #e9ecef;
+        }
+        
+        .slider-section p {
+            margin: 15px 0 8px;
+            color: #495057;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .result-box {
+            background: #d1f7e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border: 2px solid #20c997;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .result-box p {
+            margin: 0;
+            color: #20c997;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e9ecef;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #20c997;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .potential-interactive {
+            margin: 40px 0;
+            padding: 30px;
+            background: white;
+        }
+        
+        .interactive-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .control-panel {
+            background: white;
+            padding: 20px;
+        }
+        
+        .control-group {
+            margin-bottom: 25px;
+        }
+        
+        .control-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .slider-labels {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+        
+        .slider-labels span {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .slider-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .value-display {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #495057;
+            margin-top: 10px;
+        }
+        
+        .stats-panel {
+            background: white;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ced4da;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background: #20c997;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        
+        button:hover {
+            background: #1ba87e;
+            transform: translateY(-2px);
+        }
+        
+        .visualization-container {
+            position: relative;
+            height: 400px;
+            background: white;
+            border: 2px solid #dee2e6;
+            overflow: hidden;
+        }
+        
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: #6c757d;
+        }
+        
+        #ball {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #20c997, #1ba87e);
+            box-shadow: 0 4px 12px rgba(32, 201, 151, 0.3);
+            cursor: pointer;
+            z-index: 10;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .height-line {
+            position: absolute;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: #dee2e6;
+            opacity: 0.5;
+        }
+        
+        .height-label {
+            position: absolute;
+            left: 10%;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .energy-bar-container {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 20px;
+            height: 360px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .energy-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, #20c997, #ffd43b);
+            border-radius: 10px;
+            transition: height 0.3s ease;
+        }
+        
+        .energy-label {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .height-ruler {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 20px;
+            width: 20px;
+            border-right: 2px solid #6c757d;
+        }
+        
+        .ruler-mark {
+            position: absolute;
+            right: 0;
+            width: 10px;
+            height: 1px;
+            background: #6c757d;
+        }
+        
+        .ruler-number {
+            position: absolute;
+            right: 12px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
-    <div id="potentialenergy" class="lab-content">
-        <p>
-            <h2 class="textdopolnenie">информация скоро будет...<img src="улыбка.jpg" style=" padding-bottom: -100px; width: 50px; height: auto;"></h2>
-        </p>
-    </div>
-</body>
+    <div class="lab-content">
+        <h1 class="text-lab-title">Лабораторная работа по Потенциальной энергии</h1>
 
+        <p class="text-lab-content">В ходе виртуальной лабораторной работы будет исследоваться потенциальная энергия тела на высоте на основе формулы, которая описывает зависимость энергии от массы, высоты и ускорения свободного падения.</p>
+
+        <h2 class="text-lab-subtitle">Ход работы</h2>
+
+        <ol class="text-lab-content">
+            <li>Изучение формулы
+                <p>Рассматривается формула:</p>
+                <div class="formula">
+                    <span class="formula-text">Eₚ = m · g · h</span>
+                </div>
+                <p>где</p>
+                <ul class="definitions">
+                    <li><b>Eₚ</b> — потенциальная энергия (Дж, джоули)</li>
+                    <li><b>m</b> — масса тела (кг)</li>
+                    <li><b>g</b> — ускорение свободного падения (9.8 м/с²)</li>
+                    <li><b>h</b> — высота подъёма (м)</li>
+                </ul>
+            </li>
+            <li>Настройка параметров
+                <p>Пользователь изменяет значения массы и высоты, перемещая ползунки.</p>
+                <div class="slider-section">
+                    <p>Масса тела (m): <span id="mass-value">1</span> кг</p>
+                    <input type="range" min="0" max="100" step="0.1" value="1" id="mass-slider">
+                    
+                    <p>Высота (h): <span id="height-value">0</span> м</p>
+                    <input type="range" min="0" max="50" step="0.1" value="0" id="height-slider">
+                </div>
+            </li>
+            <li>Наблюдение за результатом
+                <p>Автоматически высчитывается потенциальная энергия (Eₚ) с учётом текущих параметров.</p>
+                <div class="result-box">
+                    <p>Потенциальная энергия (Eₚ): <span id="potential-energy-value">0.00</span> Дж</p>
+                </div>
+            </li>
+            <li>Анализ результата
+                <p>Можно увидеть, как изменение массы и высоты влияет на потенциальную энергию.</p>
+
+                <div class="potential-interactive">
+                    <h3 style="margin-top: 0; color: #212529; font-size: 1.5rem; text-align: center; margin-bottom: 25px;">
+                        Интерактивная демонстрация потенциальной энергии
+                    </h3>
+                   
+                    <div class="interactive-grid">
+                        <div class="control-panel">
+                            <div class="control-group">
+                                <div class="control-label">Масса шара (m)</div>
+                                <div class="slider-labels">
+                                    <span>Лёгкий</span>
+                                    <div class="slider-container">
+                                        <input type="range" style="background: linear-gradient(to right, #20c997, #ffd43b);" min="0.1" max="10" step="0.1" value="1.0" id="interactive-mass">
+                                    </div>
+                                    <span>Тяжёлый</span>
+                                </div>
+                                <div class="value-display">
+                                    <span id="interactive-mass-value">1.0</span> кг
+                                </div>
+                            </div>
+                           
+                            <div class="control-group">
+                                <div class="control-label">Высота (h)</div>
+                                <div class="slider-labels">
+                                    <span>0 м</span>
+                                    <div class="slider-container">
+                                        <input type="range" style="background: linear-gradient(to right, #20c997, #6610f2);" min="0" max="30" step="0.1" value="0" id="interactive-height">
+                                    </div>
+                                    <span>30 м</span>
+                                </div>
+                                <div class="value-display">
+                                    <span id="interactive-height-value">0</span> м
+                                </div>
+                            </div>
+                           
+                            <div class="stats-panel">
+                                <div class="stat-item">
+                                    <span class="stat-label">Потенциальная энергия:</span>
+                                    <span class="stat-value" style="color: #20c997;" id="interactive-energy">0.00 Дж</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">g = 9.8 м/с²</span>
+                                    <span class="stat-value" style="color: #6c757d;">постоянная</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Работа силы тяжести:</span>
+                                    <span class="stat-value" style="color: #ff6b6b;" id="interactive-work">0.00 Дж</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button id="drop-btn">
+                                    ▼ Бросить
+                                </button>
+                                <button id="reset-btn">
+                                    ⟲ Сброс
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="visualization-container" id="visualization">
+                                <div class="ground"></div>
+                                <div id="ball"></div>
+                                
+                                <div class="height-line" style="bottom: 100px;"></div>
+                                <div class="height-label" style="bottom: 95px;">10 м</div>
+                                
+                                <div class="height-line" style="bottom: 200px;"></div>
+                                <div class="height-label" style="bottom: 195px;">20 м</div>
+                                
+                                <div class="height-line" style="bottom: 300px;"></div>
+                                <div class="height-label" style="bottom: 295px;">30 м</div>
+                                
+                                <div class="energy-bar-container">
+                                    <div class="energy-bar" id="energy-bar" style="height: 0%;"></div>
+                                </div>
+                                <div class="energy-label" id="energy-label">0 Дж</div>
+                                
+                                <div class="height-ruler">
+                                    <div class="ruler-mark" style="bottom: 0;"></div>
+                                    <div class="ruler-number" style="bottom: -2px;">0</div>
+                                    
+                                    <div class="ruler-mark" style="bottom: 100px;"></div>
+                                    <div class="ruler-number" style="bottom: 98px;">10</div>
+                                    
+                                    <div class="ruler-mark" style="bottom: 200px;"></div>
+                                    <div class="ruler-number" style="bottom: 198px;">20</div>
+                                    
+                                    <div class="ruler-mark" style="bottom: 300px;"></div>
+                                    <div class="ruler-number" style="bottom: 298px;">30</div>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: center; color: #6c757d; font-size: 0.85rem; margin-top: 10px;">
+                                <em>Потяните шар вверх/вниз или используйте ползунки</em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ol>
+
+        <h2 class="text-lab-subtitle">Вывод</h2>
+
+        <p class="text-lab-content">В этой лабораторной работе пользователь экспериментальным путём изучит, что потенциальная энергия пропорциональна массе тела и высоте его подъёма. Такая практика помогает лучше понять энергетические характеристики тел в гравитационном поле.</p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function() {
+            const g = 9.8;
+            let mass = 1.0;
+            let height = 0;
+            let potentialEnergy = 0;
+            let isFalling = false;
+            let animationId = null;
+            let ball = $('#ball');
+            
+            function updateValues() {
+                mass = parseFloat($('#mass-slider').val());
+                height = parseFloat($('#height-slider').val());
+                potentialEnergy = mass * g * height;
+                
+                $('#mass-value').text(mass);
+                $('#height-value').text(height.toFixed(1));
+                $('#potential-energy-value').text(potentialEnergy.toFixed(2));
+                
+                $('#interactive-mass-value').text(mass.toFixed(1));
+                $('#interactive-height-value').text(height.toFixed(1));
+                $('#interactive-mass').val(mass);
+                $('#interactive-height').val(height);
+                
+                updateInteractiveValues();
+            }
+            
+            function updateInteractiveValues() {
+                mass = parseFloat($('#interactive-mass').val());
+                height = parseFloat($('#interactive-height').val());
+                potentialEnergy = mass * g * height;
+                
+                $('#interactive-mass-value').text(mass.toFixed(1));
+                $('#interactive-height-value').text(height.toFixed(1));
+                $('#interactive-energy').text(potentialEnergy.toFixed(2) + ' Дж');
+                $('#interactive-work').text(potentialEnergy.toFixed(2) + ' Дж');
+                
+                $('#mass-slider').val(mass);
+                $('#height-slider').val(height);
+                $('#mass-value').text(mass);
+                $('#height-value').text(height.toFixed(1));
+                $('#potential-energy-value').text(potentialEnergy.toFixed(2));
+                
+                updateBall();
+                updateEnergyBar();
+            }
+            
+            function updateBall() {
+                const ballSize = 40 + (mass * 2);
+                const ballBottom = 20 + (height * 10);
+                
+                ball.css({
+                    width: ballSize + 'px',
+                    height: ballSize + 'px',
+                    bottom: ballBottom + 'px'
+                });
+            }
+            
+            function updateEnergyBar() {
+                const maxEnergy = 10 * g * 30;
+                const energyPercent = Math.min((potentialEnergy / maxEnergy) * 100, 100);
+                
+                $('#energy-bar').css('height', energyPercent + '%');
+                $('#energy-label').text(potentialEnergy.toFixed(0) + ' Дж');
+            }
+            
+            function dropBall() {
+                if (isFalling || height === 0) return;
+                
+                isFalling = true;
+                $('#drop-btn').text('▼ Падает...').css('background', '#1ba87e');
+                
+                let currentHeight = height;
+                const startBottom = 20 + (currentHeight * 10);
+                
+                animationId = requestAnimationFrame(function fall() {
+                    if (!isFalling) return;
+                    
+                    currentHeight -= 0.5;
+                    if (currentHeight < 0) currentHeight = 0;
+                    
+                    const ballBottom = 20 + (currentHeight * 10);
+                    ball.css('bottom', ballBottom + 'px');
+                    
+                    if (currentHeight === 0) {
+                        stopFalling();
+                        return;
+                    }
+                    
+                    animationId = requestAnimationFrame(fall);
+                });
+            }
+            
+            function stopFalling() {
+                isFalling = false;
+                $('#drop-btn').text('▼ Бросить').css('background', '#20c997');
+                if (animationId) cancelAnimationFrame(animationId);
+            }
+            
+            function makeBallDraggable() {
+                let isDragging = false;
+                let startY = 0;
+                let startBottom = 0;
+                
+                ball.on('mousedown', function(e) {
+                    e.preventDefault();
+                    isDragging = true;
+                    
+                    startY = e.clientY;
+                    startBottom = parseInt(ball.css('bottom')) || 20;
+                    
+                    ball.css('cursor', 'grabbing');
+                    
+                    $(document).on('mousemove', function(e) {
+                        if (!isDragging) return;
+                        
+                        let deltaY = startY - e.clientY;
+                        let newBottom = startBottom + deltaY;
+                        
+                        newBottom = Math.max(20, Math.min(newBottom, 320));
+                        
+                        ball.css('bottom', newBottom + 'px');
+                        
+                        const newHeight = (newBottom - 20) / 10;
+                        height = newHeight;
+                        
+                        $('#height-slider').val(height);
+                        $('#interactive-height').val(height);
+                        updateInteractiveValues();
+                    });
+                    
+                    $(document).on('mouseup', function() {
+                        if (!isDragging) return;
+                        
+                        isDragging = false;
+                        ball.css('cursor', 'pointer');
+                        
+                        $(document).off('mousemove');
+                        $(document).off('mouseup');
+                    });
+                });
+            }
+            
+            $('#mass-slider, #height-slider').on('input', updateValues);
+            $('#interactive-mass, #interactive-height').on('input', updateInteractiveValues);
+            
+            $('#drop-btn').click(function() {
+                if (!isFalling) {
+                    dropBall();
+                } else {
+                    stopFalling();
+                }
+            });
+            
+            $('#reset-btn').click(function() {
+                stopFalling();
+                height = 0;
+                $('#height-slider').val(0);
+                $('#interactive-height').val(0);
+                updateInteractiveValues();
+            });
+            
+            updateValues();
+            makeBallDraggable();
+        });
+    </script>
+</body>
+</html>

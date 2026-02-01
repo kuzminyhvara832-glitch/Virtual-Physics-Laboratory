@@ -1,3 +1,455 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        $(function() {
+            var voltage = 5.0;
+            var current = 1.0;
+            var resistance = 5.0;
+            
+            function updateValues() {
+                voltage = parseFloat($('#ohm-u-slider').val());
+                current = parseFloat($('#ohm-i-slider').val());
+                
+                if (current > 0) {
+                    resistance = voltage / current;
+                } else {
+                    resistance = 0;
+                }
+                
+                $('#ohm-u-value').text(voltage.toFixed(1));
+                $('#voltage-value').text(voltage.toFixed(1));
+                $('#ohm-i-value').text(current.toFixed(1));
+                $('#current-value').text(current.toFixed(1));
+                $('#ohm-r-value').text(resistance.toFixed(2));
+                $('#resistance-value').text(resistance.toFixed(2));
+                
+                updateVoltmeter(voltage);
+                updateAmmeter(current);
+                updateResistor(resistance);
+            }
+            
+            function updateVoltmeter(voltage) {
+                var angle = (voltage / 20) * 180;
+                angle = Math.max(0, Math.min(angle, 180));
+                $('#voltmeter-needle').css('transform', 'translateX(-50%) rotate(' + angle + 'deg)');
+                $('#voltmeter-display').text(voltage.toFixed(1) + ' В');
+            }
+            
+            function updateAmmeter(current) {
+                var angle = (current / 10) * 180;
+                angle = Math.max(0, Math.min(angle, 180));
+                $('#ammeter-needle').css('transform', 'translateX(-50%) rotate(' + angle + 'deg)');
+                $('#ammeter-display').text(current.toFixed(1) + ' А');
+            }
+            
+            function updateResistor(resistance) {
+                var hue = Math.min(120, resistance * 10);
+                $('#ohm-resistor').css('background', 'hsl(' + hue + ', 70%, 50%)');
+                $('#resistor-value').text(resistance.toFixed(1) + 'Ω');
+            }
+            
+            $('#ohm-u-slider').on('input', updateValues);
+            $('#ohm-i-slider').on('input', updateValues);
+            
+            $('#ohm-reset').click(function() {
+                $('#ohm-u-slider').val(5);
+                $('#ohm-i-slider').val(1);
+                updateValues();
+                $(this).text('Значения сброшены!');
+                setTimeout(() => $(this).text('Сбросить'), 1000);
+            });
+            
+            updateValues();
+            
+            setTimeout(function() {
+                $('#circuit-container').addClass('active');
+                $('#voltmeter').addClass('active');
+                $('#ammeter').addClass('active');
+                $('#ohm-resistor').addClass('active');
+            }, 300);
+        });
+    </script>
+    <style>
+        #circuit-lab {
+            margin: 20px 0;
+        }
+        
+        .circuit-interactive {
+            margin: 40px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 16px;
+            border: 1px solid #dee2e6;
+        }
+        
+        #circuit-container {
+            position: relative;
+            height: 450px;
+            width: 650px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #dee2e6;
+            margin: 20px auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        
+        #circuit-container.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .wire {
+            position: absolute;
+            background: #495057;
+            z-index: 1;
+        }
+        
+        #battery {
+            position: absolute;
+            left: 100px;
+            top: 160px;
+            width: 40px;
+            height: 80px;
+            background: linear-gradient(to bottom, #dc3545, #c82333);
+            border-radius: 5px;
+            z-index: 2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        #ohm-resistor {
+            position: absolute;
+            left: 280px;
+            top: 160px;
+            width: 100px;
+            height: 40px;
+            background: #6f42c1;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            border: 2px solid #59359a;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.6s ease 0.3s;
+            z-index: 2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        #ohm-resistor.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Вольтметр */
+        #voltmeter {
+            position: absolute;
+            left: 80px;
+            top: 280px;
+            width: 120px;
+            height: 120px;
+            background: #ffffff;
+            border-radius: 50%;
+            border: 4px solid #dc3545;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease 0.1s;
+            z-index: 3;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        #voltmeter.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Амперметр */
+        #ammeter {
+            position: absolute;
+            left: 380px;
+            top: 280px;
+            width: 120px;
+            height: 120px;
+            background: #ffffff;
+            border-radius: 50%;
+            border: 4px solid #007bff;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease 0.2s;
+            z-index: 3;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        #ammeter.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .meter-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        
+        .meter-scale {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from -90deg,
+                #28a745 0%,
+                #ffc107 50%,
+                #dc3545 100%
+            );
+        }
+        
+        .meter-needle {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 4px;
+            height: 45px;
+            background: #212529;
+            transform-origin: bottom center;
+            transform: translateX(-50%) translateY(-100%) rotate(0deg);
+            transition: transform 0.5s ease;
+            z-index: 2;
+        }
+        
+        .meter-needle:before {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: -8px;
+            width: 20px;
+            height: 20px;
+            background: #212529;
+            border-radius: 50%;
+        }
+        
+        .meter-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 12px;
+            height: 12px;
+            background: #212529;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+        
+        .meter-label {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-weight: bold;
+            color: #495057;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        
+        .meter-value {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-weight: bold;
+            color: #212529;
+            font-size: 16px;
+            transform: translateY(-50%);
+            z-index: 4;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin: 0 20px;
+        }
+        
+        .display {
+            position: absolute;
+            background: white;
+            border: 2px solid #dee2e6;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 16px;
+            text-align: center;
+            min-width: 100px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            z-index: 4;
+        }
+        
+        #voltage-display {
+            left: 60px;
+            top: 50px;
+            border-color: #dc3545;
+            background: linear-gradient(to right, #ffeaea, white);
+        }
+        
+        #current-display {
+            left: 360px;
+            top: 50px;
+            border-color: #007bff;
+            background: linear-gradient(to right, #e6f2ff, white);
+        }
+        
+        #resistance-display {
+            left: 240px;
+            top: 50px;
+            border-color: #6f42c1;
+            background: linear-gradient(to right, #f3e8ff, white);
+        }
+        
+        .formula-container {
+            margin: 25px 0;
+            padding: 25px 25px 25px 20px;
+            background: #f8f9fa; 
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            border-left: 6px solid #007bff; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .formula-container:before {
+            display: none;
+        }
+        
+        .formula-text {
+            font-family: 'Times New Roman', serif;
+            font-size: 36px;
+            font-weight: bold;
+            color: #007bff; 
+            display: block;
+            padding: 10px;
+        }
+        
+        .formula-container:after {
+            display: none;
+        }
+        
+        .text-lab-title {
+            color: #0d47a1;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .text-lab-subtitle {
+            margin-top: 30px;
+            color: #343a40;
+            font-size: 1.8rem;
+        }
+        
+        .text-lab-description {
+            max-width: 700px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .definitions {
+            list-style: none;
+            padding-left: 0;
+            margin: 15px 0;
+        }
+        
+        .definitions li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .definitions b {
+            color: #007bff;
+        }
+        
+        
+        .result-box p {
+            margin: 0;
+            font-weight: bold;
+            color: #1565c0;
+        }
+        
+        .slider-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid #dee2e6;
+        }
+        
+        .slider-group {
+            margin-bottom: 25px;
+        }
+        
+        .slider-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, #e9ecef, #6c757d);
+            margin: 10px 0;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        #ohm-reset {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        #ohm-reset:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
 <body class="light-theme">
     <div class="lab-content">
         <h1 class="text-lab-title">Лабораторная работа по Закону Ома</h1>
@@ -9,65 +461,180 @@
         <ol class="text-lab-content">
             <li>Изучение формулы
                 <p>Рассматривается формула:</p>
-                <div class="formula">
-                    <span class="formula-text">R = U / I</span>
+                <div class="formula-container">
+                    <span class="formula-text">
+                        R = U / I
+                    </span>
                 </div>
                 <p>где</p>
                 <ul class="definitions">
-                    <li><b>R</b> — сопротивление (Ом)</li>
-                    <li><b>U</b> — напряжение (В)</li>
-                    <li><b>I</b> — сила тока (А)</li>
+                    <li><b>U</b> — напряжение (В, вольты)</li>
+                    <li><b>I</b> — сила тока (А, амперы)</li>
+                    <li><b>R</b> — сопротивление (Ом, Ω)</li>
                 </ul>
             </li>
             <li>Настройка параметров
                 <p>Пользователь изменяет значения напряжения и силы тока, перемещая ползунки.</p>
                 <div class="slider-section">
-                    <p>Напряжение (U): <span id="ohm-u-value">5</span> В</p>
-                    <input type="range" min="0" max="20" step="0.1" value="5" id="ohm-u-slider">
+                    <p>Напряжение (U): <span id="ohm-u-value">5.0</span> В</p>
+                    <input type="range" id="ohm-u-slider" min="0" max="20" step="0.1" value="5">
                     
-                    <p>Сила тока (I): <span id="ohm-i-value">1</span> А</p>
-                    <input type="range" min="0.1" max="10" step="0.1" value="1" id="ohm-i-slider">
+                    <p>Сила тока (I): <span id="ohm-i-value">1.0</span> А</p>
+                    <input type="range" id="ohm-i-slider" min="0.1" max="10" step="0.1" value="1">
                 </div>
             </li>
             <li>Наблюдение за результатом
                 <p>Автоматически высчитывается сопротивление (R) с учётом текущих параметров.</p>
                 <div class="result-box">
-                    <p>Сопротивление (R): <span id="ohm-r-value">5.00</span> Ом</p>
+                    <p>Сопротивление (R): <span id="ohm-r-value">5.00</span> Ω</p>
                 </div>
             </li>
             <li>Анализ результата
-                <p>Можно увидеть, как изменение напряжения и силы тока влияет на сопротивление, что наглядно иллюстрирует закон Ома.</p>
+                <p>Вы увидите, как изменение напряжения и силы тока влияет на сопротивление в цепи, что наглядно иллюстрирует закон Ома.</p>
+
+                <div class="circuit-interactive">
+                    <h3 style="margin-top: 0; color: #212529; font-size: 1.5rem; text-align: center; margin-bottom: 25px;">
+                        Интерактивная демонстрация закона Ома
+                    </h3>
+                   
+                    <div style="display: grid; grid-template-columns: 300px 1fr; gap: 30px;">
+                        <div>
+                            <div style="margin-bottom: 25px;">
+                                <div style="font-weight: 600; color: #495057; margin-bottom: 10px;">Напряжение (U)</div>
+                                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
+                                    <span style="color: #6c757d; font-size: 0.9rem;">0 В</span>
+                                    <div style="flex: 1; position: relative;">
+                                        <input type="range" min="0" max="20" step="0.1" value="5.0" id="physics-voltage" style="width: 100%; height: 6px; border-radius: 3px; background: linear-gradient(to right, #28a745, #ffc107, #dc3545);">
+                                    </div>
+                                    <span style="color: #6c757d; font-size: 0.9rem;">20 В</span>
+                                </div>
+                                <div style="text-align: center; font-size: 1.2rem; font-weight: bold; color: #495057; margin-top: 10px;">
+                                    <span id="physics-voltage-value">5.0</span> В
+                                </div>
+                            </div>
+                           
+                            <div style="margin-bottom: 25px;">
+                                <div style="font-weight: 600; color: #495057; margin-bottom: 10px;">Сила тока (I)</div>
+                                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
+                                    <span style="color: #6c757d; font-size: 0.9rem;">0.1 А</span>
+                                    <div style="flex: 1; position: relative;">
+                                        <input type="range" min="0.1" max="10" step="0.1" value="1.0" id="physics-current" style="width: 100%; height: 6px; border-radius: 3px; background: linear-gradient(to right, #28a745, #ffc107, #dc3545);">
+                                    </div>
+                                    <span style="color: #6c757d; font-size: 0.9rem;">10 А</span>
+                                </div>
+                                <div style="text-align: center; font-size: 1.2rem; font-weight: bold; color: #495057; margin-top: 10px;">
+                                    <span id="physics-current-value">1.0</span> А
+                                </div>
+                            </div>
+                           
+                            <div style="background: #e9ecef; padding: 20px; border-radius: 10px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="color: #6c757d;">Напряжение:</span>
+                                    <span style="font-weight: bold; color: #dc3545;" id="physics-voltage-display">5.0 В</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="color: #6c757d;">Сила тока:</span>
+                                    <span style="font-weight: bold; color: #007bff;" id="physics-current-display">1.0 А</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="color: #6c757d;">Сопротивление:</span>
+                                    <span style="font-weight: bold; color: #6f42c1;" id="physics-resistance-display">5.00 Ω</span>
+                                </div>
+                            </div>
+                           
+                            <button id="ohm-reset" style="width: 100%; padding: 12px; margin-top: 20px; background: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Сбросить
+                            </button>
+                        </div>
+                       
+                        <div>
+                            <div id="circuit-container">
+                                <div class="wire" style="left: 140px; top: 200px; width: 140px; height: 6px;"></div>
+                                <div class="wire" style="left: 380px; top: 200px; width: 200px; height: 6px;"></div>
+                                <div class="wire" style="left: 100px; top: 160px; width: 6px; height: 40px;"></div>
+                                <div class="wire" style="left: 100px; top: 240px; width: 6px; height: 40px;"></div>
+                                <div class="wire" style="left: 580px; top: 160px; width: 6px; height: 40px;"></div>
+                                <div class="wire" style="left: 580px; top: 240px; width: 6px; height: 40px;"></div>
+                               
+                                <div id="battery"></div>
+                               
+                                <div id="ohm-resistor">
+                                    <span id="resistor-value">5.0Ω</span>
+                                </div>
+                               
+                                <div id="voltmeter">
+                                    <div class="meter-body">
+                                        <div class="meter-scale"></div>
+                                        <div id="voltmeter-needle" class="meter-needle"></div>
+                                        <div class="meter-center"></div>
+                                        <div class="meter-value" id="voltmeter-display">5.0 В</div>
+                                        <div class="meter-label">Вольтметр</div>
+                                    </div>
+                                </div>
+                               
+                                <div id="ammeter">
+                                    <div class="meter-body">
+                                        <div class="meter-scale"></div>
+                                        <div id="ammeter-needle" class="meter-needle"></div>
+                                        <div class="meter-center"></div>
+                                        <div class="meter-value" id="ammeter-display">1.0 А</div>
+                                        <div class="meter-label">Амперметр</div>
+                                    </div>
+                                </div>
+                               
+                                <div class="display" id="voltage-display">
+                                    U = <span id="voltage-value">5.0</span> В
+                                </div>
+                                <div class="display" id="current-display">
+                                    I = <span id="current-value">1.0</span> А
+                                </div>
+                                <div class="display" id="resistance-display">
+                                    R = <span id="resistance-value">5.00</span> Ω
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: center; color: #6c757d; font-size: 0.9rem; margin-top: 15px;">
+                                Изменяйте параметры цепи и наблюдайте за показаниями приборов
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </li>
-            
         </ol>
 
         <h2 class="text-lab-subtitle">Вывод</h2>
 
-        <p class="text-lab-description">В этой лабораторной работе пользователь экспериментальным путём изучит, что напряжение в цепи пропорционально силе тока и сопротивлению, что соответствует закону Ома. Такая практика помогает лучше понять принципы работы электрических цепей.</p>
+        <p class="text-lab-description">В этой лабораторной работе пользователь экспериментальным путём изучит, что сила тока в цепи прямо пропорциональна напряжению и обратно пропорциональна сопротивлению, что соответствует закону Ома. Такая практика помогает лучше понять электрические цепи и их параметры.</p>
     </div>
 
     <script>
-        var voltage = 5;
-        var amperage = 1;
-        
-        function calculator(){
-            $("#ohm-r-value").text((voltage / amperage).toFixed(2));
-        }
-        
-        $(document).ready(function(){
-            $("#ohm-u-slider").on("input", function(){
-                voltage = $(this).val();
-                $("#ohm-u-value").text(voltage);
-                calculator();
-            });
-
-            $("#ohm-i-slider").on("input", function(){
-                amperage = $(this).val();
-                $("#ohm-i-value").text(amperage);
-                calculator();
+        $(document).ready(function() {
+            $('#ohm-u-slider').on('input', function() {
+                var value = parseFloat($(this).val());
+                $('#physics-voltage').val(value);
+                $('#physics-voltage-value').text(value.toFixed(1));
+                $('#physics-voltage-display').text(value.toFixed(1) + ' В');
             });
             
-            calculator();
+            $('#ohm-i-slider').on('input', function() {
+                var value = parseFloat($(this).val());
+                $('#physics-current').val(value);
+                $('#physics-current-value').text(value.toFixed(1));
+                $('#physics-current-display').text(value.toFixed(1) + ' А');
+            });
+            
+            $('#physics-voltage').on('input', function() {
+                var value = parseFloat($(this).val());
+                $('#ohm-u-slider').val(value);
+                $('#ohm-u-slider').trigger('input');
+            });
+            
+            $('#physics-current').on('input', function() {
+                var value = parseFloat($(this).val());
+                $('#ohm-i-slider').val(value);
+                $('#ohm-i-slider').trigger('input');
+            });
         });
     </script>
 </body>
+</html>

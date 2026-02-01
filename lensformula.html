@@ -3,11 +3,897 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: white;
+        }
+        
+        .lab-content {
+            width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+        }
+        
+        .text-lab-title {
+            color: #0d6efd;
+            font-size: 28px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #0d6efd;
+        }
+        
+        .text-lab-subtitle {
+            color: #495057;
+            font-size: 22px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .text-lab-content {
+            color: #495057;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .formula {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            border-left: 5px solid #9c27b0;
+        }
+        
+        .formula-text {
+            font-family: 'Times New Roman', serif;
+            font-size: 36px;
+            font-weight: bold;
+            color: #9c27b0;
+        }
+        
+        .definitions {
+            background: #f8f9fa;
+            padding: 20px 20px 20px 40px;
+            border-radius: 8px;
+            margin: 20px 0;
+            list-style: none;
+        }
+        
+        .definitions li {
+            padding: 8px 0;
+            color: #495057;
+            font-size: 16px;
+            position: relative;
+        }
+        
+        .definitions li:before {
+            content: "•";
+            color: #9c27b0;
+            font-weight: bold;
+            font-size: 20px;
+            position: absolute;
+            left: -20px;
+        }
+        
+        .slider-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 1px solid #e9ecef;
+        }
+        
+        .slider-section p {
+            margin: 15px 0 8px;
+            color: #495057;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .result-box {
+            background: #f3e5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border: 2px solid #9c27b0;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .result-box p {
+            margin: 0;
+            color: #9c27b0;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e9ecef;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #9c27b0;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .lens-interactive {
+            margin: 40px 0;
+            padding: 30px;
+            background: white;
+        }
+        
+        .interactive-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .control-panel {
+            background: white;
+            padding: 20px;
+        }
+        
+        .control-group {
+            margin-bottom: 25px;
+        }
+        
+        .control-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .slider-labels {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+        
+        .slider-labels span {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .slider-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .value-display {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #495057;
+            margin-top: 10px;
+        }
+        
+        .stats-panel {
+            background: white;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ced4da;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background: #9c27b0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        
+        button:hover {
+            background: #7b1fa2;
+            transform: translateY(-2px);
+        }
+        
+        .visualization-container {
+            position: relative;
+            height: 500px;
+            background: linear-gradient(to bottom, #e3f2fd, #f3e5f5);
+            border: 2px solid #dee2e6;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .optical-axis {
+            position: absolute;
+            top: 250px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #6c757d;
+            opacity: 0.5;
+        }
+        
+        .lens {
+            position: absolute;
+            top: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 200px;
+            border-left: 4px solid #2196f3;
+            border-right: 4px solid #2196f3;
+            border-radius: 100px;
+            background: rgba(33, 150, 243, 0.1);
+        }
+        
+        .lens-center {
+            position: absolute;
+            top: 250px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            border: 3px solid #2196f3;
+            border-radius: 50%;
+            background: white;
+        }
+        
+        .object {
+            position: absolute;
+            width: 40px;
+            height: 120px;
+            background: linear-gradient(to bottom, #ff6b6b, #ff4757);
+            border-radius: 4px;
+            cursor: move;
+        }
+        
+        .object-arrow {
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid #ff6b6b;
+        }
+        
+        .image {
+            position: absolute;
+            width: 40px;
+            height: 120px;
+            background: linear-gradient(to bottom, #4caf50, #388e3c);
+            border-radius: 4px;
+            opacity: 0.8;
+        }
+        
+        .image-arrow {
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid #4caf50;
+        }
+        
+        .focal-point {
+            position: absolute;
+            top: 250px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff9800;
+            border-radius: 50%;
+            background: rgba(255, 152, 0, 0.2);
+        }
+        
+        .focal-label {
+            position: absolute;
+            color: #ff9800;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .ray {
+            position: absolute;
+            height: 2px;
+            background: #ff9800;
+            transform-origin: left center;
+            opacity: 0.7;
+        }
+        
+        .ray::after {
+            content: '→';
+            position: absolute;
+            right: -10px;
+            top: -8px;
+            color: #ff9800;
+            font-size: 16px;
+        }
+        
+        .distance-line {
+            position: absolute;
+            height: 1px;
+            border-top: 2px dashed #6c757d;
+        }
+        
+        .distance-label {
+            position: absolute;
+            color: #6c757d;
+            font-size: 14px;
+            background: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .scale {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 20px;
+            border-top: 1px solid #6c757d;
+        }
+        
+        .scale-mark {
+            position: absolute;
+            top: 0;
+            width: 1px;
+            height: 10px;
+            background: #6c757d;
+        }
+        
+        .scale-number {
+            position: absolute;
+            top: 12px;
+            font-size: 12px;
+            color: #6c757d;
+            transform: translateX(-50%);
+        }
+        
+        .lens-type {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-weight: bold;
+            color: #2196f3;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 2px solid #2196f3;
+        }
+    </style>
 </head>
 <body>
-    <div id="lensformula" class="lab-content">
-        <p>
-            <h2 class="textdopolnenie">информация скоро будет...<img src="улыбка.jpg" style=" padding-bottom: -100px; width: 50px; height: auto;"></h2>
-        </p>
+    <div class="lab-content">
+        <h1 class="text-lab-title">Лабораторная работа по Формуле тонкой линзы</h1>
+
+        <p class="text-lab-content">В ходе виртуальной лабораторной работы будет исследоваться формула тонкой линзы, которая описывает связь между расстояниями от предмета до линзы и от линзы до изображения с фокусным расстоянием линзы.</p>
+
+        <h2 class="text-lab-subtitle">Ход работы</h2>
+
+        <ol class="text-lab-content">
+            <li>Изучение формулы
+                <p>Рассматривается формула тонкой линзы:</p>
+                <div class="formula">
+                    <span class="formula-text">1/F = 1/d + 1/f</span>
+                </div>
+                <p>где</p>
+                <ul class="definitions">
+                    <li><b>F</b> — фокусное расстояние линзы (м)</li>
+                    <li><b>d</b> — расстояние от предмета до линзы (м)</li>
+                    <li><b>f</b> — расстояние от линзы до изображения (м)</li>
+                </ul>
+                <p>Для собирающей линзы: F > 0, для рассеивающей: F < 0</p>
+            </li>
+            <li>Настройка параметров
+                <p>Пользователь изменяет фокусное расстояние линзы и положение предмета.</p>
+                <div class="slider-section">
+                    <p>Фокусное расстояние (F): <span id="focal-value">0.3</span> м</p>
+                    <input type="range" min="-0.5" max="0.5" step="0.05" value="0.3" id="focal-slider">
+                    
+                    <p>Расстояние до предмета (d): <span id="object-distance-value">0.6</span> м</p>
+                    <input type="range" min="0.1" max="1.5" step="0.05" value="0.6" id="object-distance-slider">
+                    
+                    <p>Высота предмета (h): <span id="object-height-value">0.1</span> м</p>
+                    <input type="range" min="0.05" max="0.3" step="0.01" value="0.1" id="object-height-slider">
+                </div>
+            </li>
+            <li>Наблюдение за результатом
+                <p>Автоматически высчитывается положение и размер изображения.</p>
+                <div class="result-box">
+                    <p>Расстояние до изображения (f): <span id="image-distance-value">0.60</span> м</p>
+                    <p>Увеличение (Γ): <span id="magnification-value">1.00</span></p>
+                </div>
+            </li>
+            <li>Анализ результата
+                <p>Можно увидеть, как изменение параметров влияет на изображение.</p>
+
+                <div class="lens-interactive">
+                    <h3 style="margin-top: 0; color: #212529; font-size: 1.5rem; text-align: center; margin-bottom: 25px;">
+                        Интерактивная демонстрация формулы тонкой линзы
+                    </h3>
+                   
+                    <div class="interactive-grid">
+                        <div class="control-panel">
+                            <div class="control-group">
+                                <div class="control-label">Фокусное расстояние (F)</div>
+                                <div class="slider-labels">
+                                    <span>Рассеивающая</span>
+                                    <div class="slider-container">
+                                        <input type="range" style="background: linear-gradient(to right, #ff5252, #2196f3);" min="-0.5" max="0.5" step="0.05" value="0.3" id="interactive-focal">
+                                    </div>
+                                    <span>Собирающая</span>
+                                </div>
+                                <div class="value-display">
+                                    <span id="interactive-focal-value">0.30</span> м
+                                </div>
+                            </div>
+                           
+                            <div class="control-group">
+                                <div class="control-label">Расстояние до предмета (d)</div>
+                                <div class="slider-labels">
+                                    <span>Близко</span>
+                                    <div class="slider-container">
+                                        <input type="range" style="background: linear-gradient(to right, #ff6b6b, #4caf50);" min="0.1" max="1.5" step="0.05" value="0.6" id="interactive-object-distance">
+                                    </div>
+                                    <span>Далеко</span>
+                                </div>
+                                <div class="value-display">
+                                    <span id="interactive-object-distance-value">0.60</span> м
+                                </div>
+                            </div>
+                           
+                            <div class="control-group">
+                                <div class="control-label">Высота предмета (h)</div>
+                                <div class="slider-labels">
+                                    <span>Маленький</span>
+                                    <div class="slider-container">
+                                        <input type="range" style="background: linear-gradient(to right, #ff6b6b, #ff9800);" min="0.05" max="0.3" step="0.01" value="0.1" id="interactive-object-height">
+                                    </div>
+                                    <span>Большой</span>
+                                </div>
+                                <div class="value-display">
+                                    <span id="interactive-object-height-value">0.10</span> м
+                                </div>
+                            </div>
+                           
+                            <div class="stats-panel">
+                                <div class="stat-item">
+                                    <span class="stat-label">Положение изображения:</span>
+                                    <span class="stat-value" style="color: #4caf50;" id="interactive-image-position">0.60 м</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Увеличение:</span>
+                                    <span class="stat-value" style="color: #9c27b0;" id="interactive-magnification">1.00</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Характер изображения:</span>
+                                    <span class="stat-value" style="color: #2196f3;" id="interactive-image-type">Действительное</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button id="show-rays-btn">
+                                    📐 Показать лучи
+                                </button>
+                                <button id="reset-btn">
+                                    ⟲ Сброс
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="visualization-container" id="visualization">
+                                <div class="optical-axis"></div>
+                                <div class="lens"></div>
+                                <div class="lens-center"></div>
+                                
+                                <div class="focal-point" id="focal-point-f" style="left: calc(50% + 150px);"></div>
+                                <div class="focal-label" style="left: calc(50% + 155px); top: 235px;">F</div>
+                                
+                                <div class="focal-point" id="focal-point-2f" style="left: calc(50% + 300px);"></div>
+                                <div class="focal-label" style="left: calc(50% + 305px); top: 235px;">2F</div>
+                                
+                                <div class="focal-point" id="focal-point-minus-f" style="left: calc(50% - 150px);"></div>
+                                <div class="focal-label" style="left: calc(50% - 145px); top: 235px;">-F</div>
+                                
+                                <div class="focal-point" id="focal-point-minus-2f" style="left: calc(50% - 300px);"></div>
+                                <div class="focal-label" style="left: calc(50% - 295px); top: 235px;">-2F</div>
+                                
+                                <div class="object" id="object" style="left: calc(50% - 300px); top: 190px;">
+                                    <div class="object-arrow"></div>
+                                </div>
+                                
+                                <div class="image" id="image" style="left: calc(50% + 300px); top: 190px;">
+                                    <div class="image-arrow"></div>
+                                </div>
+                                
+                                <div class="lens-type" id="lens-type">
+                                    Собирающая линза
+                                </div>
+                                
+                                <div class="ray" id="ray-parallel" style="display: none;"></div>
+                                <div class="ray" id="ray-focal" style="display: none;"></div>
+                                <div class="ray" id="ray-central" style="display: none;"></div>
+                                
+                                <div class="distance-line" id="distance-object" style="top: 320px; left: calc(50% - 300px); width: 300px;"></div>
+                                <div class="distance-label" style="top: 325px; left: 50%;">d = 0.60 м</div>
+                                
+                                <div class="distance-line" id="distance-image" style="top: 350px; left: 50%; width: 300px;"></div>
+                                <div class="distance-label" style="top: 355px; left: calc(50% + 150px);">f = 0.60 м</div>
+                                
+                                <div class="scale">
+                                    <div class="scale-mark" style="left: 0;"></div>
+                                    <div class="scale-number" style="left: 0;">-1.5</div>
+                                    
+                                    <div class="scale-mark" style="left: 25%;"></div>
+                                    <div class="scale-number" style="left: 25%;">-0.75</div>
+                                    
+                                    <div class="scale-mark" style="left: 50%;"></div>
+                                    <div class="scale-number" style="left: 50%;">0</div>
+                                    
+                                    <div class="scale-mark" style="left: 75%;"></div>
+                                    <div class="scale-number" style="left: 75%;">0.75</div>
+                                    
+                                    <div class="scale-mark" style="left: 100%;"></div>
+                                    <div class="scale-number" style="left: 100%;">1.5</div>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: center; color: #6c757d; font-size: 0.85rem; margin-top: 10px;">
+                                <em>Перетащите предмет вдоль оптической оси. Меняйте фокусное расстояние линзы!</em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ol>
+
+        <h2 class="text-lab-subtitle">Вывод</h2>
+
+        <p class="text-lab-content">В этой лабораторной работе пользователь экспериментальным путём изучит формулу тонкой линзы и основные свойства линз: действительное/мнимое изображение, прямое/перевёрнутое, увеличенное/уменьшенное. Такая практика помогает лучше понять законы геометрической оптики.</p>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function() {
+            let focalLength = 0.3;
+            let objectDistance = 0.6;
+            let objectHeight = 0.1;
+            let imageDistance = 0;
+            let magnification = 0;
+            let showRays = false;
+            let isDragging = false;
+
+            const SCALE = 500;
+            
+            updateValues();
+            makeObjectDraggable();
+            
+            function updateValues() {
+                focalLength = parseFloat($('#focal-slider').val());
+                objectDistance = parseFloat($('#object-distance-slider').val());
+                objectHeight = parseFloat($('#object-height-slider').val());
+                
+                // Формула тонкой линзы: 1/F = 1/d + 1/f
+                if (focalLength !== 0 && objectDistance !== 0) {
+                    imageDistance = 1 / (1/focalLength - 1/objectDistance);
+                    magnification = -imageDistance / objectDistance;
+                } else {
+                    imageDistance = 0;
+                    magnification = 0;
+                }
+                
+                $('#focal-value').text(focalLength.toFixed(2));
+                $('#object-distance-value').text(objectDistance.toFixed(2));
+                $('#object-height-value').text(objectHeight.toFixed(2));
+                $('#image-distance-value').text(imageDistance.toFixed(2));
+                $('#magnification-value').text(magnification.toFixed(2));
+                
+                $('#interactive-focal').val(focalLength);
+                $('#interactive-object-distance').val(objectDistance);
+                $('#interactive-object-height').val(objectHeight);
+                
+                updateInteractiveValues();
+            }
+            
+            function updateInteractiveValues() {
+                focalLength = parseFloat($('#interactive-focal').val());
+                objectDistance = parseFloat($('#interactive-object-distance').val());
+                objectHeight = parseFloat($('#interactive-object-height').val());
+                
+                // Формула тонкой линзы
+                if (focalLength !== 0 && objectDistance !== 0) {
+                    imageDistance = 1 / (1/focalLength - 1/objectDistance);
+                    magnification = -imageDistance / objectDistance;
+                } else {
+                    imageDistance = 0;
+                    magnification = 0;
+                }
+                
+                $('#interactive-focal-value').text(focalLength.toFixed(2));
+                $('#interactive-object-distance-value').text(objectDistance.toFixed(2));
+                $('#interactive-object-height-value').text(objectHeight.toFixed(2));
+                $('#interactive-image-position').text(imageDistance.toFixed(2) + ' м');
+                $('#interactive-magnification').text(magnification.toFixed(2));
+
+                let imageType = '';
+                let imageCharacter = '';
+                
+                if (focalLength > 0) { // Собирающая линза
+                    if (objectDistance > focalLength) {
+                        imageType = 'Действительное';
+                        imageCharacter = 'перевёрнутое';
+                    } else if (objectDistance < focalLength) {
+                        imageType = 'Мнимое';
+                        imageCharacter = 'прямое';
+                    } else {
+                        imageType = 'В фокусе';
+                        imageCharacter = 'на ∞';
+                    }
+                } else { // Рассеивающая линза
+                    imageType = 'Мнимое';
+                    imageCharacter = 'прямое';
+                }
+                
+                $('#interactive-image-type').text(`${imageType}, ${imageCharacter}`);
+                
+                $('#focal-slider').val(focalLength);
+                $('#object-distance-slider').val(objectDistance);
+                $('#object-height-slider').val(objectHeight);
+                $('#focal-value').text(focalLength.toFixed(2));
+                $('#object-distance-value').text(objectDistance.toFixed(2));
+                $('#object-height-value').text(objectHeight.toFixed(2));
+                $('#image-distance-value').text(imageDistance.toFixed(2));
+                $('#magnification-value').text(magnification.toFixed(2));
+                
+                updateVisualization();
+            }
+            
+            function updateVisualization() {
+                const centerX = $('#visualization').width() / 2;
+                const centerY = 250;
+                
+                // Тип линзы
+                if (focalLength > 0) {
+                    $('#lens-type').text('Собирающая линза').css({
+                        color: '#2196f3',
+                        borderColor: '#2196f3'
+                    });
+                } else {
+                    $('#lens-type').text('Рассеивающая линза').css({
+                        color: '#ff5252',
+                        borderColor: '#ff5252'
+                    });
+                }
+                
+                // Позиция предмета (слева от линзы)
+                const objectLeft = centerX - (objectDistance * SCALE);
+                const objectHeightPx = objectHeight * SCALE;
+                
+                $('#object').css({
+                    left: (objectLeft - 20) + 'px',
+                    top: (centerY - objectHeightPx/2) + 'px',
+                    height: objectHeightPx + 'px'
+                });
+                
+                // Позиция изображения (справа от линзы для действительного, слева для мнимого)
+                let imageLeft, imageHeightPx;
+                
+                if (imageDistance > 0) {
+                    imageLeft = centerX + (imageDistance * SCALE);
+                    imageHeightPx = Math.abs(magnification) * objectHeightPx;
+                    
+                    $('#image').css({
+                        left: (imageLeft - 20) + 'px',
+                        top: (centerY - imageHeightPx/2) + 'px',
+                        height: imageHeightPx + 'px',
+                        background: magnification > 0 ? 
+                            'linear-gradient(to bottom, #4caf50, #388e3c)' : 
+                            'linear-gradient(to top, #4caf50, #388e3c)' 
+                    });
+                    
+                    if (magnification > 0) {
+                        $('#image .image-arrow').css({
+                            borderBottomColor: '#4caf50',
+                            borderTop: 'none'
+                        });
+                    } else {
+                        $('#image .image-arrow').css({
+                            borderTopColor: '#4caf50',
+                            borderBottom: 'none',
+                            top: imageHeightPx + 'px'
+                        });
+                    }
+                    
+                    $('#image').show();
+                } else if (imageDistance < 0) { 
+                    imageLeft = centerX + (imageDistance * SCALE);
+                    imageHeightPx = Math.abs(magnification) * objectHeightPx;
+                    
+                    $('#image').css({
+                        left: (imageLeft - 20) + 'px',
+                        top: (centerY - imageHeightPx/2) + 'px',
+                        height: imageHeightPx + 'px',
+                        background: 'linear-gradient(to bottom, #ff9800, #f57c00)'
+                    });
+                    
+                    $('#image').show();
+                } else {
+                    $('#image').hide();
+                }
+                
+                const focalPx = Math.abs(focalLength) * SCALE;
+                
+                $('#focal-point-f').css('left', (centerX + focalPx) + 'px');
+                $('#focal-label-f').css('left', (centerX + focalPx + 5) + 'px');
+                
+                $('#focal-point-2f').css('left', (centerX + 2*focalPx) + 'px');
+                $('#focal-label-2f').css('left', (centerX + 2*focalPx + 5) + 'px');
+                
+                $('#focal-point-minus-f').css('left', (centerX - focalPx) + 'px');
+                $('#focal-label-minus-f').css('left', (centerX - focalPx + 5) + 'px');
+                
+                $('#focal-point-minus-2f').css('left', (centerX - 2*focalPx) + 'px');
+                $('#focal-label-minus-2f').css('left', (centerX - 2*focalPx + 5) + 'px');
+                
+                $('#distance-object').css({
+                    left: objectLeft + 'px',
+                    width: Math.abs(centerX - objectLeft) + 'px'
+                });
+                
+                $('#distance-image').css({
+                    left: centerX + 'px',
+                    width: Math.abs(imageLeft - centerX) + 'px',
+                    display: Math.abs(imageDistance) > 0.1 ? 'block' : 'none'
+                });
+                
+                $('.distance-label').eq(0).text(`d = ${objectDistance.toFixed(2)} м`);
+                $('.distance-label').eq(1).text(`f = ${Math.abs(imageDistance).toFixed(2)} м`);
+                
+
+                if (showRays) {
+                    drawRays();
+                }
+            }
+            
+            function drawRays() {
+                const centerX = $('#visualization').width() / 2;
+                const centerY = 250;
+                const objectLeft = centerX - (objectDistance * SCALE);
+                const objectHeightPx = objectHeight * SCALE;
+                const objectTop = centerY - objectHeightPx/2;
+                const focalPx = focalLength * SCALE;
+                
+                if (focalLength > 0 && objectDistance > focalLength) {
+                    $('#ray-parallel').css({
+                        left: objectLeft + 'px',
+                        top: objectTop + 'px',
+                        width: (centerX - objectLeft) + 'px',
+                        transform: 'rotate(0deg)'
+                    }).show();
+                    
+                    $('#ray-focal').css({
+                        left: centerX + 'px',
+                        top: objectTop + 'px',
+                        width: (imageDistance * SCALE) + 'px',
+                        transform: `rotate(${Math.atan2(objectTop - centerY, imageDistance * SCALE) * 180 / Math.PI}deg)`
+                    }).show();
+                } else {
+                    $('#ray-parallel').hide();
+                    $('#ray-focal').hide();
+                }
+                
+                $('#ray-central').css({
+                    left: objectLeft + 'px',
+                    top: objectTop + 'px',
+                    width: Math.sqrt(Math.pow(centerX + imageDistance * SCALE - objectLeft, 2) + 
+                                    Math.pow(250 - objectTop, 2)) + 'px',
+                    transform: `rotate(${Math.atan2(250 - objectTop, centerX + imageDistance * SCALE - objectLeft) * 180 / Math.PI}deg)`
+                }).show();
+            }
+            
+            function makeObjectDraggable() {
+                let startX = 0;
+                let startLeft = 0;
+                
+                $('#object').on('mousedown', function(e) {
+                    e.preventDefault();
+                    isDragging = true;
+                    
+                    startX = e.clientX;
+                    startLeft = parseInt($(this).css('left')) || 200;
+                    
+                    $(this).css('cursor', 'grabbing');
+                    
+                    $(document).on('mousemove', function(e) {
+                        if (!isDragging) return;
+                        
+                        const deltaX = e.clientX - startX;
+                        let newLeft = startLeft + deltaX;
+                        
+                        const centerX = $('#visualization').width() / 2;
+                        newLeft = Math.max(50, Math.min(newLeft, centerX - 100));
+                        
+                        $('#object').css('left', newLeft + 'px');
+                        
+                        const newDistance = (centerX - newLeft - 20) / SCALE;
+                        objectDistance = Math.max(0.1, Math.min(1.5, newDistance));
+                        
+                        $('#interactive-object-distance').val(objectDistance);
+                        updateInteractiveValues();
+                    });
+                    
+                    $(document).on('mouseup', function() {
+                        if (!isDragging) return;
+                        
+                        isDragging = false;
+                        $('#object').css('cursor', 'move');
+                        
+                        $(document).off('mousemove');
+                        $(document).off('mouseup');
+                    });
+                });
+            }
+
+            $('#focal-slider, #object-distance-slider, #object-height-slider').on('input', updateValues);
+            $('#interactive-focal, #interactive-object-distance, #interactive-object-height').on('input', updateInteractiveValues);
+            
+            $('#show-rays-btn').click(function() {
+                showRays = !showRays;
+                $(this).text(showRays ? '📐 Скрыть лучи' : '📐 Показать лучи');
+                updateVisualization();
+            });
+            
+            $('#reset-btn').click(function() {
+                focalLength = 0.3;
+                objectDistance = 0.6;
+                objectHeight = 0.1;
+                
+                $('#interactive-focal').val(focalLength);
+                $('#interactive-object-distance').val(objectDistance);
+                $('#interactive-object-height').val(objectHeight);
+                
+                updateInteractiveValues();
+            });
+        });
+    </script>
 </body>
+</html>

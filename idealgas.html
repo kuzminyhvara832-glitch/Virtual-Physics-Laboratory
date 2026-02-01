@@ -3,11 +3,769 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: white;
+        }
+        
+        .lab-content {
+            width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+        }
+        
+        .text-lab-title {
+            color: #0d6efd;
+            font-size: 28px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #0d6efd;
+        }
+        
+        .text-lab-subtitle {
+            color: #495057;
+            font-size: 22px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .text-lab-content {
+            color: #495057;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .formula {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            border-left: 5px solid #9c27b0;
+        }
+        
+        .formula-text {
+            font-family: 'Times New Roman', serif;
+            font-size: 36px;
+            font-weight: bold;
+            color: #9c27b0;
+        }
+        
+        .definitions {
+            background: #f8f9fa;
+            padding: 20px 20px 20px 40px;
+            border-radius: 8px;
+            margin: 20px 0;
+            list-style: none;
+        }
+        
+        .definitions li {
+            padding: 8px 0;
+            color: #495057;
+            font-size: 16px;
+            position: relative;
+        }
+        
+        .definitions li:before {
+            content: "•";
+            color: #9c27b0;
+            font-weight: bold;
+            font-size: 20px;
+            position: absolute;
+            left: -20px;
+        }
+        
+        .slider-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 1px solid #e9ecef;
+        }
+        
+        .slider-section p {
+            margin: 15px 0 8px;
+            color: #495057;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .result-box {
+            background: #f3e5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border: 2px solid #9c27b0;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .result-box p {
+            margin: 0;
+            color: #9c27b0;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e9ecef;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #9c27b0;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .gas-interactive {
+            margin: 40px 0;
+            padding: 30px;
+            background: white;
+        }
+        
+        .interactive-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .control-panel {
+            background: white;
+            padding: 20px;
+        }
+        
+        .control-group {
+            margin-bottom: 25px;
+        }
+        
+        .control-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .slider-labels {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+        
+        .slider-labels span {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .slider-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .value-display {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #495057;
+            margin-top: 10px;
+        }
+        
+        .stats-panel {
+            background: white;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ced4da;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background: #9c27b0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        
+        button:hover {
+            background: #7b1fa2;
+            transform: translateY(-2px);
+        }
+        
+        .visualization-container {
+            position: relative;
+            height: 400px;
+            background: white;
+            border: 2px solid #dee2e6;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        #gas-container {
+            position: absolute;
+            bottom: 40px;
+            left: 50px;
+            right: 50px;
+            height: 250px;
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .gas-particle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #2196f3;
+            opacity: 0.7;
+        }
+        
+        .piston {
+            position: absolute;
+            bottom: 290px;
+            left: 50px;
+            right: 50px;
+            height: 30px;
+            background: linear-gradient(to bottom, #795548, #5d4037);
+            border: 2px solid #3e2723;
+            border-radius: 8px 8px 0 0;
+            cursor: ns-resize;
+        }
+        
+        .temperature-gauge {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 20px;
+            height: 200px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .temperature-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, #2196f3, #f44336);
+            border-radius: 10px;
+            transition: height 0.3s ease;
+        }
+        
+        .temperature-label {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .pressure-gauge {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #9c27b0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #9c27b0;
+            background: white;
+        }
+        
+        .volume-scale {
+            position: absolute;
+            left: 20px;
+            bottom: 300px;
+            width: 20px;
+            border-left: 2px solid #6c757d;
+        }
+        
+        .scale-mark {
+            position: absolute;
+            left: 0;
+            width: 10px;
+            height: 1px;
+            background: #6c757d;
+        }
+        
+        .scale-number {
+            position: absolute;
+            left: 12px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 14px;
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
-    <div id="idealgas" class="lab-content">
-        <p>
-            <h2 class="textdopolnenie">информация скоро будет...<img src="улыбка.jpg" style=" padding-bottom: -100px; width: 50px; height: auto;"></h2>
-        </p>
+    <div class="lab-content">
+        <h1 class="text-lab-title">Лабораторная работа по Уравнению состояния идеального газа</h1>
+
+        <p class="text-lab-content">В ходе виртуальной лабораторной работы будет исследоваться уравнение состояния идеального газа, которое описывает зависимость между давлением, объёмом, температурой и количеством вещества.</p>
+
+        <h2 class="text-lab-subtitle">Ход работы</h2>
+
+        <ol class="text-lab-content">
+            <li>Изучение формулы
+                <p>Рассматривается уравнение Менделеева-Клапейрона:</p>
+                <div class="formula">
+                    <span class="formula-text">P · V = n · R · T</span>
+                </div>
+                <p>где</p>
+                <ul class="definitions">
+                    <li><b>P</b> — давление газа (Па, паскаль)</li>
+                    <li><b>V</b> — объём газа (м³)</li>
+                    <li><b>n</b> — количество вещества (моль)</li>
+                    <li><b>R</b> — универсальная газовая постоянная (8.31 Дж/(моль·К))</li>
+                    <li><b>T</b> — температура (К, кельвин)</li>
+                </ul>
+            </li>
+            <li>Настройка параметров
+                <p>Пользователь изменяет значения давления, объёма и температуры, перемещая ползунки.</p>
+                <div class="slider-section">
+                    <p>Давление (P): <span id="pressure-value">101325</span> Па</p>
+                    <input type="range" min="50000" max="300000" step="1000" value="101325" id="pressure-slider">
+                    
+                    <p>Объём (V): <span id="volume-value">0.024</span> м³</p>
+                    <input type="range" min="0.01" max="0.05" step="0.001" value="0.024" id="volume-slider">
+                    
+                    <p>Температура (T): <span id="temperature-value">293</span> К</p>
+                    <input type="range" min="200" max="500" step="1" value="293" id="temperature-slider">
+                </div>
+            </li>
+            <li>Наблюдение за результатом
+                <p>Автоматически высчитывается количество вещества (n) с учётом текущих параметров.</p>
+                <div class="result-box">
+                    <p>Количество вещества (n): <span id="moles-value">1.00</span> моль</p>
+                </div>
+            </li>
+            <li>Анализ результата
+                <p>Можно увидеть, как изменение параметров влияет на состояние газа.</p>
+
+                <div class="gas-interactive">
+                    <h3 style="margin-top: 0; color: #212529; font-size: 1.5rem; text-align: center; margin-bottom: 25px;">
+                        Интерактивная демонстрация идеального газа
+                    </h3>
+                   
+                    <div class="interactive-grid">
+                        <div class="control-panel">
+                            <div class="control-group">
+                                <div class="control-label">Давление (P)</div>
+                                <div class="slider-labels">
+                                    <span>Низкое</span>
+                                    <div class="slider-container">
+                                        <input type="range" style="background: linear-gradient(to right, #2196f3, #9c27b0);" min="50000" max="300000" step="1000" value="101325" id="interactive-pressure">
+                                    </div>
+                                    <span>Высокое</span>
+                                </div>
+                                <div class="value-display">
+                                    <span id="interactive-pressure-value">101325</span> Па
+                                </div>
+                            </div>
+                           
+                            <div class="control-group">
+                                <div class="control-label">Объём (V)</div>
+                                <div class="slider-labels">
+                                    <span>Малый</span>
+                                    <div class="slider-container">
+                                        <input type="range" style="background: linear-gradient(to right, #2196f3, #9c27b0);" min="0.01" max="0.05" step="0.001" value="0.024" id="interactive-volume">
+                                    </div>
+                                    <span>Большой</span>
+                                </div>
+                                <div class="value-display">
+                                    <span id="interactive-volume-value">0.024</span> м³
+                                </div>
+                            </div>
+                           
+                            <div class="control-group">
+                                <div class="control-label">Температура (T)</div>
+                                <div class="slider-labels">
+                                    <span>Низкая</span>
+                                    <div class="slider-container">
+                                        <input type="range" style="background: linear-gradient(to right, #2196f3, #f44336);" min="200" max="500" step="1" value="293" id="interactive-temperature">
+                                    </div>
+                                    <span>Высокая</span>
+                                </div>
+                                <div class="value-display">
+                                    <span id="interactive-temperature-value">293</span> К
+                                </div>
+                            </div>
+                           
+                            <div class="stats-panel">
+                                <div class="stat-item">
+                                    <span class="stat-label">Количество вещества:</span>
+                                    <span class="stat-value" style="color: #9c27b0;" id="interactive-moles">1.00 моль</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">R = 8.31 Дж/(моль·К)</span>
+                                    <span class="stat-value" style="color: #6c757d;">постоянная</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">PV/nRT:</span>
+                                    <span class="stat-value" style="color: #20c997;" id="interactive-ratio">1.00</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button id="simulate-btn">
+                                    ▶ Имитация
+                                </button>
+                                <button id="reset-btn">
+                                    ⟲ Сброс
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="visualization-container" id="visualization">
+                                <div id="gas-container"></div>
+                                <div class="piston" id="piston"></div>
+                                
+                                <div class="temperature-gauge">
+                                    <div class="temperature-bar" id="temperature-bar" style="height: 50%;"></div>
+                                </div>
+                                <div class="temperature-label" id="temperature-label">293 K</div>
+                                
+                                <div class="pressure-gauge" id="pressure-gauge">
+                                    1 атм
+                                </div>
+                                
+                                <div class="volume-scale">
+                                    <div class="scale-mark" style="top: 0;"></div>
+                                    <div class="scale-number" style="top: -2px;">V</div>
+                                    
+                                    <div class="scale-mark" style="top: 50px;"></div>
+                                    <div class="scale-number" style="top: 48px;">0.02</div>
+                                    
+                                    <div class="scale-mark" style="top: 100px;"></div>
+                                    <div class="scale-number" style="top: 98px;">0.03</div>
+                                    
+                                    <div class="scale-mark" style="top: 150px;"></div>
+                                    <div class="scale-number" style="top: 148px;">0.04</div>
+                                </div>
+                                
+                                <div class="axis-label" style="left: 10px; bottom: 290px;">Объём (м³)</div>
+                                <div class="axis-label" style="right: 20px; top: 20px;">Температура (K)</div>
+                            </div>
+                            
+                            <div style="text-align: center; color: #6c757d; font-size: 0.85rem; margin-top: 10px;">
+                                <em>Перетащите поршень вверх/вниз или используйте ползунки</em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ol>
+
+        <h2 class="text-lab-subtitle">Вывод</h2>
+
+        <p class="text-lab-content">В этой лабораторной работе пользователь экспериментальным путём изучит уравнение состояния идеального газа и взаимосвязь между давлением, объёмом и температурой. Такая практика помогает лучше понять законы термодинамики.</p>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function() {
+            const R = 8.31;
+            
+            // Переменные
+            let pressure = 101325;
+            let volume = 0.024;
+            let temperature = 293;
+            let moles = 1.0;
+            let isSimulating = false;
+            let animationId = null;
+            let particles = [];
+            
+            updateValues();
+            createParticles();
+            makePistonDraggable();
+            
+            function updateValues() {
+                pressure = parseFloat($('#pressure-slider').val());
+                volume = parseFloat($('#volume-slider').val());
+                temperature = parseFloat($('#temperature-slider').val());
+                moles = (pressure * volume) / (R * temperature);
+                
+                // Обновляем отображение
+                $('#pressure-value').text(pressure.toFixed(0));
+                $('#volume-value').text(volume.toFixed(3));
+                $('#temperature-value').text(temperature.toFixed(0));
+                $('#moles-value').text(moles.toFixed(2));
+                $('#interactive-pressure').val(pressure);
+                $('#interactive-volume').val(volume);
+                $('#interactive-temperature').val(temperature);
+                
+                updateInteractiveValues();
+            }
+            
+            function updateInteractiveValues() {
+                pressure = parseFloat($('#interactive-pressure').val());
+                volume = parseFloat($('#interactive-volume').val());
+                temperature = parseFloat($('#interactive-temperature').val());
+                moles = (pressure * volume) / (R * temperature);
+                const ratio = (pressure * volume) / (moles * R * temperature);
+                $('#interactive-pressure-value').text(pressure.toFixed(0));
+                $('#interactive-volume-value').text(volume.toFixed(3));
+                $('#interactive-temperature-value').text(temperature.toFixed(0));
+                $('#interactive-moles').text(moles.toFixed(2) + ' моль');
+                $('#interactive-ratio').text(ratio.toFixed(2));
+                
+                // Обновляем шкалу давления
+                const pressureAtm = (pressure / 101325).toFixed(1);
+                $('#pressure-gauge').text(pressureAtm + ' атм');
+                
+                // Обновляем шкалу температуры
+                $('#temperature-label').text(temperature.toFixed(0) + ' K');
+                const tempPercent = ((temperature - 200) / 300) * 100;
+                $('#temperature-bar').css('height', tempPercent + '%');
+
+                $('#pressure-slider').val(pressure);
+                $('#volume-slider').val(volume);
+                $('#temperature-slider').val(temperature);
+                $('#pressure-value').text(pressure.toFixed(0));
+                $('#volume-value').text(volume.toFixed(3));
+                $('#temperature-value').text(temperature.toFixed(0));
+                $('#moles-value').text(moles.toFixed(2));
+                
+                updateVisualization();
+            }
+            
+            function createParticles() {
+                const container = $('#gas-container');
+                container.empty();
+                particles = [];
+                
+                // Создаем частицы газа
+                for (let i = 0; i < 30; i++) {
+                    const particle = $('<div class="gas-particle"></div>');
+                    container.append(particle);
+                    
+                    const size = 10 + Math.random() * 10;
+                    particle.css({
+                        width: size + 'px',
+                        height: size + 'px',
+                        left: Math.random() * (container.width() - 20) + 'px',
+                        top: Math.random() * (container.height() - 20) + 'px',
+                        background: temperature < 273 ? 
+                            'radial-gradient(circle at 30% 30%, #2196f3, #1976d2)' :
+                            temperature < 373 ?
+                            'radial-gradient(circle at 30% 30%, #f44336, #d32f2f)' :
+                            'radial-gradient(circle at 30% 30%, #ff9800, #f57c00)'
+                    });
+                    
+                    particles.push({
+                        element: particle,
+                        x: Math.random() * (container.width() - 20),
+                        y: Math.random() * (container.height() - 20),
+                        vx: (Math.random() - 0.5) * (temperature / 100),
+                        vy: (Math.random() - 0.5) * (temperature / 100)
+                    });
+                }
+            }
+            
+            function updateVisualization() {
+                const pistonHeight = 290 - (volume * 5000);
+                $('#piston').css('bottom', pistonHeight + 'px');
+                
+                // Обновляем высоту контейнера газа
+                const gasHeight = pistonHeight - 40;
+                $('#gas-container').css('height', gasHeight + 'px');
+                
+                // Обновляем скорость частиц в зависимости от температуры
+                particles.forEach(p => {
+                    const speedFactor = temperature / 293;
+                    p.vx = (Math.random() - 0.5) * speedFactor * 2;
+                    p.vy = (Math.random() - 0.5) * speedFactor * 2;
+                    
+                    p.element.css({
+                        background: temperature < 273 ? 
+                            'radial-gradient(circle at 30% 30%, #2196f3, #1976d2)' :
+                            temperature < 373 ?
+                            'radial-gradient(circle at 30% 30%, #f44336, #d32f2f)' :
+                            'radial-gradient(circle at 30% 30%, #ff9800, #f57c00)'
+                    });
+                });
+                const pressureNorm = (pressure - 50000) / 250000;
+                const red = Math.floor(33 + pressureNorm * 200);
+                const blue = Math.floor(107 - pressureNorm * 100);
+                $('#gas-container').css('background', `rgb(${red}, ${150 - pressureNorm * 50}, ${blue})`);
+            }
+            
+            function simulateGas() {
+                if (isSimulating) return;
+                
+                isSimulating = true;
+                $('#simulate-btn').text('▶ Имитация...').css('background', '#7b1fa2');
+                
+                animationId = requestAnimationFrame(function animate() {
+                    if (!isSimulating) return;
+                    
+                    const container = $('#gas-container');
+                    const width = container.width();
+                    const height = container.height();
+                    
+                    particles.forEach(p => {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        
+                        // Отскок от стенок
+                        if (p.x <= 0 || p.x >= width - 20) {
+                            p.vx *= -1;
+                            p.x = p.x <= 0 ? 0 : width - 20;
+                        }
+                        if (p.y <= 0 || p.y >= height - 20) {
+                            p.vy *= -1;
+                            p.y = p.y <= 0 ? 0 : height - 20;
+                        }
+                        
+                        p.element.css({
+                            left: p.x + 'px',
+                            top: p.y + 'px'
+                        });
+                        
+                        // Скорость зависит от температуры
+                        const speedFactor = temperature / 293;
+                        if (Math.random() < 0.01) {
+                            p.vx += (Math.random() - 0.5) * speedFactor * 0.5;
+                            p.vy += (Math.random() - 0.5) * speedFactor * 0.5;
+                        }
+                        
+                        // Ограничиваем максимальную скорость
+                        const maxSpeed = speedFactor * 3;
+                        const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+                        if (speed > maxSpeed) {
+                            p.vx = (p.vx / speed) * maxSpeed;
+                            p.vy = (p.vy / speed) * maxSpeed;
+                        }
+                    });
+                    
+                    animationId = requestAnimationFrame(animate);
+                });
+            }
+            
+            function stopSimulation() {
+                isSimulating = false;
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+                $('#simulate-btn').text('▶ Имитация').css('background', '#9c27b0');
+            }
+            
+            function makePistonDraggable() {
+                let isDragging = false;
+                let startY = 0;
+                let startBottom = 0;
+                
+                $('#piston').on('mousedown', function(e) {
+                    e.preventDefault();
+                    isDragging = true;
+                    
+                    startY = e.clientY;
+                    startBottom = parseInt($(this).css('bottom')) || 290;
+                    
+                    $(this).css('cursor', 'grabbing');
+                    
+                    $(document).on('mousemove', function(e) {
+                        if (!isDragging) return;
+                        
+                        let deltaY = startY - e.clientY;
+                        let newBottom = startBottom + deltaY;
+                        
+                        newBottom = Math.max(140, Math.min(newBottom, 290));
+                        
+                        $('#piston').css('bottom', newBottom + 'px');
+
+                        volume = (290 - newBottom) / 5000;
+                        $('#interactive-volume').val(volume);
+                        updateInteractiveValues();
+                    });
+                    
+                    $(document).on('mouseup', function() {
+                        if (!isDragging) return;
+                        
+                        isDragging = false;
+                        $('#piston').css('cursor', 'ns-resize');
+                        
+                        $(document).off('mousemove');
+                        $(document).off('mouseup');
+                    });
+                });
+            }
+            
+            $('#pressure-slider, #volume-slider, #temperature-slider').on('input', updateValues);
+            $('#interactive-pressure, #interactive-volume, #interactive-temperature').on('input', updateInteractiveValues);
+            
+            $('#simulate-btn').click(function() {
+                if (!isSimulating) {
+                    simulateGas();
+                } else {
+                    stopSimulation();
+                }
+            });
+            
+            $('#reset-btn').click(function() {
+                stopSimulation();
+                pressure = 101325;
+                volume = 0.024;
+                temperature = 293;
+                
+                $('#interactive-pressure').val(pressure);
+                $('#interactive-volume').val(volume);
+                $('#interactive-temperature').val(temperature);
+                
+                updateInteractiveValues();
+                createParticles();
+            });
+        });
+    </script>
 </body>
+</html>

@@ -674,3 +674,81 @@ ol li p {
 .dark-theme ol li p {
     color: #a0aec0;
 }
+
+/* для мобильных устройств  */
+@media (max-width: 768px) {
+    .lab-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid;
+        padding: 15px;
+    }
+
+    .nav-buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .nav-button {
+        padding: 10px 12px;
+        font-size: 14px;
+        flex: 1 1 calc(50% - 8px);
+        text-align: center;
+    }
+
+    .content {
+        padding: 20px;
+        overflow-y: visible;
+    }
+
+    .content h2 {
+        font-size: 24px;
+    }
+
+    .formula .formula-text-guk,
+    .formula .formula-newton-text,
+    .formula .formula-text-ohm,
+    .formula .formula-text-kineticenergy {
+        font-size: 28px;
+    }
+
+    .theme-switcher {
+        position: relative;
+        top: auto;
+        right: auto;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    #theme-toggle {
+        width: 100%;
+        border-radius: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-button {
+        flex: 1 1 100%;
+    }
+
+    .content h2 {
+        font-size: 20px;
+    }
+
+    .content .description {
+        font-size: 14px;
+    }
+
+    .formula .formula-text-guk,
+    .formula .formula-newton-text,
+    .formula .formula-text-ohm,
+    .formula .formula-text-kineticenergy {
+        font-size: 24px;
+    }
+}
